@@ -20,10 +20,6 @@ const benefits = [
   { icon: '📊', title: 'Progreso visual', desc: 'Consulta qué tan preparado vas para cada examen.' },
 ];
 
-const pills = [
-  'Fundamentos matemáticos', 'Cálculo diferencial', 'Cálculo integral',
-  'Física', 'Probabilidad y estadística', 'Ecuaciones diferenciales',
-];
 
 export default function Landing() {
   const sectionsRef = useRef([]);
@@ -87,21 +83,6 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="hero__preview" ref={addRef}>
-            <div className="hero__preview-card glass-card">
-              <h3>¿Qué necesitas estudiar?</h3>
-              <div className="hero__pills">
-                {pills.map((pill, i) => (
-                  <span key={i} className="hero__pill" style={{ animationDelay: `${i * 0.15}s` }}>
-                    {pill}
-                  </span>
-                ))}
-              </div>
-              <div className="hero__mini-box">
-                <p>Selecciona una materia, agrega tus temas y deja que la IA organice tu estudio.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
