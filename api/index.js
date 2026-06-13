@@ -17,7 +17,7 @@ const { Pool } = pg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // Required for Neon and hosted databases
+    rejectUnauthorized: false, // Required for Neon
   },
 });
 
@@ -44,6 +44,7 @@ async function initializeDatabase() {
   }
 }
 
+// Call database initialization (runs when serverless function is warmed up or when local server runs)
 initializeDatabase();
 
 // --- API ROUTES ---
@@ -57,17 +58,14 @@ app.post('/api/auth/register', async (req, res) => {
   }
 
   try {
-    // Check if email already exists
     const userExists = await pool.query('SELECT id FROM usuarios WHERE correo = $1', [correo]);
     if (userExists.rows.length > 0) {
       return res.status(400).json({ success: false, message: 'Este correo ya está registrado.' });
     }
 
-    // Hash the password securely
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(contrasena, salt);
 
-    // Insert user into DB
     const result = await pool.query(
       'INSERT INTO usuarios (nombre, correo, contrasena) VALUES ($1, $2, $3) RETURNING id, nombre, correo',
       [nombre, correo, hashedPassword]
@@ -94,7 +92,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 
   try {
-    // Check if user exists
     const result = await pool.query('SELECT * FROM usuarios WHERE correo = $1', [correo]);
     if (result.rows.length === 0) {
       return res.status(400).json({ success: false, message: 'El usuario no existe.' });
@@ -102,7 +99,6 @@ app.post('/api/auth/login', async (req, res) => {
 
     const user = result.rows[0];
 
-    // Check password
     const isMatch = await bcrypt.compare(contrasena, user.contrasena);
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Contraseña incorrecta.' });
@@ -123,6 +119,12 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
-});
+// Run app.listen only if we are NOT in the Vercel serverless environment (local development)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor local corriendo en http://localhost:${PORT}`);
+  });
+}
+
+// Export default app for Vercel serverless function routing
+export default app;
