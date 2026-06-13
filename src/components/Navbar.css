@@ -14,11 +14,11 @@
 }
 
 .navbar--scrolled {
-  background: rgba(10, 11, 16, 0.85);
+  background: var(--bg-glass-strong);
   backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--border-color);
   padding: var(--space-3) 0;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .navbar__inner {
@@ -131,20 +131,20 @@
 
 .navbar__btn--outline:hover {
   border-color: var(--primary-500);
-  color: var(--primary-400);
-  background: rgba(92, 124, 250, 0.05);
+  color: var(--primary-600);
+  background: rgba(var(--primary-rgb), 0.05);
 }
 
 .navbar__btn--primary {
   background: var(--gradient-primary);
   color: #fff;
   border: none;
-  box-shadow: 0 0 20px rgba(92, 124, 250, 0.2);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
 }
 
 .navbar__btn--primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 30px rgba(92, 124, 250, 0.35);
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.25);
   color: #fff;
 }
 
@@ -198,7 +198,7 @@
     padding: 80px var(--space-7) var(--space-7);
     gap: var(--space-5);
     transition: right var(--transition-slow);
-    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+    box-shadow: -4px 0 20px rgba(var(--primary-rgb), 0.05);
   }
 
   .navbar__nav--open {

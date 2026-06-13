@@ -154,7 +154,7 @@
   display: flex;
   gap: var(--space-3);
   padding: var(--space-4);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(var(--primary-rgb), 0.02);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -162,14 +162,14 @@
 }
 
 .added-card:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--primary-rgb), 0.05);
   border-color: var(--border-color-hover);
 }
 
 .added-card.selected {
-  background: rgba(92, 124, 250, 0.08);
+  background: rgba(var(--primary-rgb), 0.08);
   border-color: var(--primary-500);
-  box-shadow: 0 0 15px rgba(92, 124, 250, 0.1);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.08);
 }
 
 .added-card__icon {
@@ -196,7 +196,7 @@
   width: 20px;
   height: 20px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--primary-rgb), 0.05);
   color: var(--text-secondary);
   display: flex;
   align-items: center;
@@ -293,7 +293,7 @@
   display: flex;
   gap: var(--space-3);
   padding: var(--space-3);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(var(--primary-rgb), 0.02);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -301,7 +301,7 @@
 }
 
 .catalog-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--primary-rgb), 0.06);
   border-color: var(--primary-500);
 }
 
@@ -363,13 +363,13 @@
 
 .form-group input,
 .form-group select {
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   padding: var(--space-3);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  transition: border-color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .form-group input:focus,
@@ -397,7 +397,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(var(--primary-rgb), 0.04);
   padding: var(--space-3);
   border-radius: var(--radius-sm);
   min-height: 45px;
@@ -408,9 +408,9 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-3);
-  background: rgba(92, 124, 250, 0.12);
-  border: 1px solid rgba(92, 124, 250, 0.2);
-  color: var(--primary-300);
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
+  color: var(--primary-700);
   border-radius: var(--radius-full);
   font-size: 0.8rem;
   font-weight: 500;
@@ -469,8 +469,8 @@
 }
 
 .topic-select-card.active {
-  background: rgba(132, 94, 247, 0.06);
-  border-color: rgba(132, 94, 247, 0.3);
+  background: rgba(var(--accent-rgb), 0.08);
+  border-color: rgba(var(--accent-rgb), 0.3);
 }
 
 .topic-select-card input[type="checkbox"] {
@@ -514,7 +514,7 @@
 }
 
 .topic-select-card.active .topic-name {
-  color: #fff;
+  color: var(--accent-700);
 }
 
 /* TIME SETTINGS */
@@ -557,7 +557,7 @@
   border-radius: var(--radius-full);
   background: var(--gradient-primary);
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(92, 124, 250, 0.4);
+  box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
   transition: transform var(--transition-fast);
 }
 
@@ -638,7 +638,7 @@
 .preview-topics ul {
   max-height: 200px;
   overflow-y: auto;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(var(--primary-rgb), 0.04);
   padding: var(--space-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
