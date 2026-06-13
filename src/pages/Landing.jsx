@@ -78,7 +78,7 @@ export default function Landing() {
             </p>
 
             <div className="hero__actions">
-              <Link to="/estudiar" className="btn-primary">
+              <Link to="/crear-plan" className="btn-primary">
                 Crear mi plan →
               </Link>
               <a href="#materias" className="btn-secondary">
@@ -132,7 +132,7 @@ export default function Landing() {
           <div className="subjects__grid">
             {subjects.map((subject, i) => (
               <Link
-                to="/estudiar"
+                to={`/crear-plan?materia=${encodeURIComponent(subject.name)}`}
                 key={i}
                 className="subject-card glass-card"
                 style={{ animationDelay: `${i * 0.08}s` }}
@@ -174,7 +174,7 @@ export default function Landing() {
             <div className="cta__glow"></div>
             <h2>Empieza con una materia y recibe tu primer plan.</h2>
             <p>Convierte tu tiempo libre en una ruta clara de estudio.</p>
-            <Link to="/estudiar" className="btn-primary">
+            <Link to="/crear-plan" className="btn-primary">
               Generar mi plan ahora →
             </Link>
           </div>

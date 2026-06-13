@@ -38,6 +38,23 @@ async function initializeDatabase() {
       );
     `);
     console.log('✅ Tabla "usuarios" verificada/creada correctamente');
+
+    // Create the planes_estudio table if it doesn't exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS planes_estudio (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        materia VARCHAR(100) NOT NULL,
+        icon VARCHAR(10) NOT NULL,
+        tiempo_dias INT NOT NULL,
+        horas_diarias INT NOT NULL,
+        temas JSONB NOT NULL,
+        estado VARCHAR(20) DEFAULT 'activo',
+        creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✅ Tabla "planes_estudio" verificada/creada correctamente');
+
     client.release();
   } catch (err) {
     console.error('❌ Error al conectar o inicializar la base de datos:', err.message);
@@ -116,6 +133,126 @@ app.post('/api/auth/login', async (req, res) => {
   } catch (err) {
     console.error('Error en login:', err.message);
     res.status(500).json({ success: false, message: 'Error en el servidor al iniciar sesión.' });
+  }
+});
+
+// 3. Crear Plan de Estudio
+app.post('/api/planes', async (req, res) => {
+  const { usuario_id, materia, icon, tiempo_dias, horas_diarias, temas } = req.body;
+
+  if (!usuario_id || !materia || !tiempo_dias || !horas_diarias || !temas) {
+    return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO planes_estudio (usuario_id, materia, icon, tiempo_dias, horas_diarias, temas, estado)
+       VALUES ($1, $2, $3, $4, $5, $6, 'activo')
+       RETURNING *`,
+      [usuario_id, materia, icon || '📚', tiempo_dias, horas_diarias, JSON.stringify(temas)]
+    );
+
+    res.status(201).json({
+      success: true,
+      plan: result.rows[0],
+      message: 'Plan de estudio creado con éxito.',
+    });
+  } catch (err) {
+    console.error('Error al crear plan:', err.message);
+    res.status(500).json({ success: false, message: 'Error en el servidor al crear plan de estudio.' });
+  }
+});
+
+// 4. Obtener Planes de un Usuario
+app.get('/api/planes', async (req, res) => {
+  const { usuario_id } = req.query;
+
+  if (!usuario_id) {
+    return res.status(400).json({ success: false, message: 'El id de usuario es obligatorio.' });
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM planes_estudio WHERE usuario_id = $1 ORDER BY creado_en DESC',
+      [usuario_id]
+    );
+
+    res.status(200).json({
+      success: true,
+      planes: result.rows,
+    });
+  } catch (err) {
+    console.error('Error al obtener planes:', err.message);
+    res.status(500).json({ success: false, message: 'Error en el servidor al obtener planes de estudio.' });
+  }
+});
+
+// 5. Actualizar Plan de Estudio (Temas o Estado)
+app.put('/api/planes/:id', async (req, res) => {
+  const { id } = req.params;
+  const { temas, estado } = req.body;
+
+  if (temas === undefined && estado === undefined) {
+    return res.status(400).json({ success: false, message: 'Se requiere al menos un campo para actualizar.' });
+  }
+
+  try {
+    let query = 'UPDATE planes_estudio SET ';
+    const values = [];
+    let count = 1;
+
+    if (temas !== undefined) {
+      query += `temas = $${count}, `;
+      values.push(JSON.stringify(temas));
+      count++;
+    }
+
+    if (estado !== undefined) {
+      query += `estado = $${count}, `;
+      values.push(estado);
+      count++;
+    }
+
+    // Remover la coma y espacio finales
+    query = query.slice(0, -2);
+    query += ` WHERE id = $${count} RETURNING *`;
+    values.push(id);
+
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Plan de estudio no encontrado.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      plan: result.rows[0],
+      message: 'Plan de estudio actualizado con éxito.',
+    });
+  } catch (err) {
+    console.error('Error al actualizar plan:', err.message);
+    res.status(500).json({ success: false, message: 'Error en el servidor al actualizar plan de estudio.' });
+  }
+});
+
+// 6. Eliminar Plan de Estudio
+app.delete('/api/planes/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query('DELETE FROM planes_estudio WHERE id = $1 RETURNING *', [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Plan de estudio no encontrado.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Plan de estudio eliminado con éxito.',
+    });
+  } catch (err) {
+    console.error('Error al eliminar plan:', err.message);
+    res.status(500).json({ success: false, message: 'Error en el servidor al eliminar plan de estudio.' });
   }
 });
 

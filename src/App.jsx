@@ -4,6 +4,7 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Study from './pages/Study'
+import CreatePlan from './pages/CreatePlan'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
         <Route path="/estudiar" element={<Study />} />
+        <Route path="/crear-plan" element={<CreatePlan />} />
       </Routes>
     </>
   )
