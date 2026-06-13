@@ -312,23 +312,28 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
     quiz = [
       {
-        question: '¿Qué significa que f(x) sea continua en x = a?',
+        question: 'Si lim(x→a) f(x) = 0 y lim(x→a) g(x) = 0, ¿qué se puede afirmar a priori sobre lim(x→a) f(x)/g(x)?',
         options: [
-          'Que f(a) existe, el límite lim(x→a) f(x) existe y ambos coinciden.',
-          'Que la derivada f\'(a) sea positiva.',
-          'Que el límite al infinito sea cero.',
-          'Que la función no tenga raíces.'
+          'El límite no existe.',
+          'Es igual a 0.',
+          'Es una indeterminación de tipo 0/0; su valor real depende del comportamiento relativo de f y g al aproximarse a a.',
+          'Es siempre igual a 1.'
         ],
-        correct: 0,
-        explanation: 'Es la definición formal de continuidad en un punto.',
-        weakArea: 'Definición de continuidad'
+        correct: 2,
+        explanation: 'La forma 0/0 es una indeterminación. El valor real del límite dependerá de cómo se aproximen ambas funciones a cero (por ejemplo, aplicando la Regla de L\'Hôpital o simplificación algebraica).',
+        weakArea: 'Concepto de Indeterminación'
       },
       {
-        question: '¿Cuál es el valor de lim(x→0) sin(5x) / x?',
-        options: ['0', '1', '5', '1/5'],
+        question: 'Si una función f(x) cumple que f(1) = 3, pero lim(x→1) f(x) = 5, ¿cuál de las siguientes afirmaciones es correcta?',
+        options: [
+          'La función es continua en x = 1.',
+          'f(x) presenta una discontinuidad inevitable de salto infinito.',
+          'f(x) presenta una discontinuidad evitable en x = 1.',
+          'La derivada f\'(1) debe ser 0.'
+        ],
         correct: 2,
-        explanation: 'Multiplicando y dividiendo por 5, lim (sin(5x)/5x) * 5 = 1 * 5 = 5.',
-        weakArea: 'Límites trigonométricos'
+        explanation: 'Una discontinuidad es evitable si el límite en el punto existe pero difiere del valor de la función, es decir, lim(x→c) f(x) ≠ f(c).',
+        weakArea: 'Definición de Continuidad'
       }
     ];
   } else if (formattedTopic.includes('derivada') || formattedTopic.includes('deriv') || formattedTopic.includes('derivación')) {
@@ -370,18 +375,28 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
     quiz = [
       {
-        question: '¿Cuál es la derivada de f(x) = ln(x)?',
-        options: ['1/x', 'e^x', 'x', '1'],
-        correct: 0,
-        explanation: 'La derivada de la función logaritmo natural es 1/x.',
-        weakArea: 'Derivadas trascendentes'
+        question: 'Si una función f(x) tiene f\'(c) = 0 y f\'\'(c) = 0, ¿qué se puede concluir con certeza sobre el punto c?',
+        options: [
+          'Que c es un máximo local.',
+          'Que c es un mínimo local.',
+          'Que c es un punto de inflexión.',
+          'El criterio de la segunda derivada no es concluyente; se requiere analizar derivadas de orden superior o el cambio de signo de f\'.'
+        ],
+        correct: 3,
+        explanation: 'Si la segunda derivada es cero, el criterio de la segunda derivada no decide. Puede ser un extremo o un punto de inflexión (ej: y=x³ vs y=x⁴ en x=0).',
+        weakArea: 'Criterio de la segunda derivada'
       },
       {
-        question: 'Si f\'(c) = 0 y f\'\'(c) < 0, entonces en c hay:',
-        options: ['Un mínimo local', 'Un máximo local', 'Un punto de inflexión', 'Una discontinuidad'],
-        correct: 1,
-        explanation: 'Segunda derivada negativa indica que la curva es cóncava hacia abajo, por lo que es un máximo.',
-        weakArea: 'Criterio de la segunda derivada'
+        question: '¿Cuál de las siguientes afirmaciones respecto a la diferenciabilidad de f(x) = |x| en x = 0 es correcta?',
+        options: [
+          'Es diferenciable porque es una función continua en toda la recta real.',
+          'La derivada en x = 0 es 0 porque es el punto más bajo de la curva.',
+          'No es diferenciable en x = 0 porque los límites laterales del cociente incremental difieren (dan 1 y -1).',
+          'Su derivada en x = 0 es 1.'
+        ],
+        correct: 2,
+        explanation: 'La función valor absoluto tiene un "pico" en x=0. Los límites laterales de la pendiente de la secante son 1 (por la derecha) y -1 (por la izquierda), por lo que la derivada no existe en ese punto.',
+        weakArea: 'Diferenciabilidad y continuidad'
       }
     ];
   } else if (formattedTopic.includes('poo') || formattedTopic.includes('objeto') || formattedTopic.includes('clase') || formattedTopic.includes('orientada a objetos')) {
@@ -423,16 +438,28 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
     quiz = [
       {
-        question: '¿Cuál es el beneficio principal del encapsulamiento?',
+        question: 'En Java, si una clase hija sobrescribe un método de la clase padre heredando la misma firma, pero cambia el tipo de retorno a un subtipo del tipo de retorno original (ej. retornar ArrayList en vez de List):',
         options: [
-          'Hacer que el programa corra más rápido',
-          'Proteger el estado interno de los objetos y modular el acceso',
-          'Permitir herencia múltiple de clases',
-          'Evitar escribir constructores'
+          'Provoca un error de compilación por firma incompatible.',
+          'Es una sobrescritura válida permitida desde Java 5 (conocida como retorno covariante).',
+          'El compilador lo interpreta como una sobrecarga de métodos.',
+          'Solo se permite si la clase padre es una interfaz y no una clase regular.'
         ],
         correct: 1,
-        explanation: 'El encapsulamiento protege los datos de modificaciones indebidas externas.',
-        weakArea: 'Encapsulamiento'
+        explanation: 'Java permite los retornos covariantes en la sobrescritura, lo cual significa que el método de la subclase puede devolver un tipo derivado del tipo de retorno declarado en la clase base.',
+        weakArea: 'Retorno covariante en POO'
+      },
+      {
+        question: '¿Cuál de las siguientes describe con mayor precisión la diferencia entre clase abstracta e interfaz a partir de Java 8?',
+        options: [
+          'Las interfaces ya no permiten herencia múltiple.',
+          'Las clases abstractas pueden almacenar variables de instancia que representan un estado mutable, mientras que las interfaces solo pueden declarar constantes implícitas (public static final).',
+          'Las interfaces ya no pueden contener métodos sin implementación.',
+          'Las clases abstractas solo permiten métodos con visibilidad protegida.'
+        ],
+        correct: 1,
+        explanation: 'A pesar de que las interfaces modernas permiten métodos por defecto y estáticos con cuerpo, la diferencia clave sigue siendo el estado: las clases abstractas pueden tener constructores y variables de instancia no constantes, mientras que las interfaces solo admiten variables implícitamente estáticas y constantes.',
+        weakArea: 'Clases abstractas vs Interfaces'
       }
     ];
   }
@@ -506,7 +533,7 @@ Esquema JSON requerido:
   ],
   "quiz": [
     {
-      "question": "Pregunta del test (string)",
+      "question": "Pregunta del test. Debe ser desafiante, NO OBVIA, a nivel universitario, que exija análisis y deducción al estudiante (string)",
       "options": ["Opción 0", "Opción 1", "Opción 2", "Opción 3"],
       "correct": 0,
       "explanation": "Explicación de por qué es la correcta (string)",
@@ -515,7 +542,7 @@ Esquema JSON requerido:
   ]
 }
 
-Asegúrate de agregar al menos 3 flashcards y 4 parejas en el matching game. Genera de 3 a 5 preguntas en el quiz. Devuelve solo el JSON válido sin bloques de código markdown (\`\`\`json) ni texto adicional.`;
+Asegúrate de agregar al menos 3 flashcards y 4 parejas en el matching game. Genera de 3 a 5 preguntas en el quiz. IMPORTANTE: Las preguntas del quiz NO deben ser obvias ni de simple memorización; deben requerir análisis lógico, deducción matemática o conceptual y hacer pensar al alumno. Devuelve solo el JSON válido sin bloques de código markdown (\`\`\`json) ni texto adicional.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

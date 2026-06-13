@@ -356,3 +356,61 @@ ul, ol {
   background: var(--bg-card-hover);
   box-shadow: var(--shadow-md);
 }
+
+/* ==========================================
+   DARK THEME DEFINITION — Sleek Black & Blue
+   ========================================== */
+.theme-dark {
+  /* HSL tailored deep tones */
+  --bg-primary: #080b11;       /* Jet deep black-blue */
+  --bg-secondary: #0f131e;     /* Deep navy blue */
+  --bg-card: #151b2c;          /* Slate-blue card background */
+  --bg-card-hover: #1b233a;    /* Slightly lighter card hover */
+  --bg-glass: rgba(21, 27, 44, 0.75);
+  --bg-glass-strong: rgba(21, 27, 44, 0.9);
+  --border-color: rgba(28, 126, 214, 0.16);  /* Blue tint border */
+  --border-color-hover: rgba(28, 126, 214, 0.32);
+  --text-primary: #f1f5f9;      /* Slate-white text */
+  --text-secondary: #94a3b8;    /* Muted slate text */
+  --text-muted: #64748b;        /* Slate border/caption text */
+
+  /* Override lilac primary with blue colors */
+  --primary-rgb: 28, 126, 214;  /* Blue (#1c7ed6) */
+  --primary-50: #0b1e33;
+  --primary-100: #102a4d;
+  --primary-200: #143b6b;
+  --primary-300: #185294;
+  --primary-400: #339af0;       /* Lighter blue */
+  --primary-500: #1c7ed6;       /* Mid blue */
+  --primary-600: #1971c2;
+  --primary-700: #1864ab;       /* Deep blue */
+  --primary-800: #15518a;
+  --primary-900: #103b66;
+
+  /* Accent/skies */
+  --accent-rgb: 51, 154, 240;
+  --accent-500: #339af0;
+  --accent-600: #228be6;
+
+  /* Neutrals override for form inputs and grey sections */
+  --gray-50: #0a0e1a;
+  --gray-100: #151b2c;
+  --gray-200: #1b233a;
+  --gray-300: #252f4c;
+  --gray-400: #34426b;
+  --gray-500: #4b5c8f;
+  --gray-600: #6d7fae;
+  --gray-700: #94a3b8;
+  --gray-800: #e2e8f0;
+  --gray-900: #f8fafc;
+
+  /* Shadows override to fit dark backgrounds */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px rgba(28, 126, 214, 0.15);
+
+  --gradient-primary: linear-gradient(135deg, #1c7ed6, #339af0);
+  --gradient-hero: linear-gradient(160deg, #080b11 0%, #0f131e 60%, #151b2c 100%);
+  --gradient-card: linear-gradient(145deg, #151b2c 0%, #101524 100%);
+}
