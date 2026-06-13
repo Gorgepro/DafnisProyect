@@ -45,13 +45,19 @@ async function initializeDatabase() {
         id SERIAL PRIMARY KEY,
         usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
         materia VARCHAR(100) NOT NULL,
-        icon VARCHAR(10) NOT NULL,
+        icon VARCHAR(10) DEFAULT '',
         tiempo_dias INT NOT NULL,
         horas_diarias INT NOT NULL,
         temas JSONB NOT NULL,
         estado VARCHAR(20) DEFAULT 'activo',
         creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Safe migration: add estado column if table existed without it
+    await client.query(`
+      ALTER TABLE planes_estudio
+      ADD COLUMN IF NOT EXISTS estado VARCHAR(20) DEFAULT 'activo';
     `);
     console.log('✅ Tabla "planes_estudio" verificada/creada correctamente');
 
@@ -187,6 +193,12 @@ app.get('/api/planes', async (req, res) => {
   }
 });
 
+const VALID_ESTADOS = ['activo', 'finalizado'];
+
+function validateEstado(estado) {
+  return VALID_ESTADOS.includes(estado);
+}
+
 // 5. Actualizar Plan de Estudio (Temas o Estado)
 app.put('/api/planes/:id', async (req, res) => {
   const { id } = req.params;
@@ -194,6 +206,13 @@ app.put('/api/planes/:id', async (req, res) => {
 
   if (temas === undefined && estado === undefined) {
     return res.status(400).json({ success: false, message: 'Se requiere al menos un campo para actualizar.' });
+  }
+
+  if (estado !== undefined && !validateEstado(estado)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Estado inválido. Solo se permiten "activo" o "finalizado".',
+    });
   }
 
   try {

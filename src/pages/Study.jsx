@@ -1,203 +1,54 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getTopicContent } from '../data/subjectContent';
 import './Study.css';
-
-// Rich Mock Dictionary for course topics
-const subjectContent = {
-  'fundamentos matemáticos': {
-    'álgebra básica': {
-      guide: 'El álgebra básica utiliza letras para representar números y formular relaciones matemáticas. Las reglas de los signos y las leyes de exponentes son fundamentales.',
-      code: 'Ejemplo de ecuación:\n3x + 5 = 20\n3x = 15\nx = 5',
-      tip: 'Siempre comprueba tu solución sustituyendo el valor obtenido en la ecuación original.',
-      errors: [
-        'Confundir las leyes de signos (ej. (-x)*(-y) = +xy).',
-        'No aplicar la misma operación a ambos lados de la igualdad.',
-        'Sumar términos con diferentes variables (ej. 2x + 3y no es 5xy).'
-      ],
-      quiz: [
-        { question: '1. Si 2x - 4 = 10, ¿cuánto vale x?', options: ['x = 7', 'x = 3', 'x = 5'], correct: 0 },
-        { question: '2. ¿Cuál es el resultado de x³ * x⁴?', options: ['x¹²', 'x⁷', '2x⁷'], correct: 1 }
-      ]
-    },
-    'operaciones aritméticas': {
-      guide: 'Las operaciones aritméticas son la base de las matemáticas: suma, resta, multiplicación y división. Es clave entender el orden de las operaciones (PEMDAS).',
-      code: 'Orden de operaciones (PEMDAS):\n1. Paréntesis\n2. Exponentes\n3. Multiplicación/División\n4. Suma/Resta',
-      tip: 'Recuerda que la multiplicación y la división tienen la misma prioridad y se resuelven de izquierda a derecha.',
-      errors: [
-        'Ignorar el orden de precedencia (ej. resolver sumas antes que multiplicaciones).',
-        'Errores al restar números negativos.',
-        'División entre cero (no definida).'
-      ],
-      quiz: [
-        { question: '1. ¿Cuál es el resultado de 6 + 2 * 3?', options: ['24', '12', '10'], correct: 1 },
-        { question: '2. ¿Cuál es el resultado de 10 - 3 + 2?', options: ['9', '5', '11'], correct: 0 }
-      ]
-    }
-  },
-  'cálculo diferencial': {
-    'límites y continuidad': {
-      guide: 'Un límite describe el comportamiento de una función cerca de un punto, en lugar de en ese punto específico. La continuidad requiere que el límite coincida con el valor de la función.',
-      code: 'lim (x->2) (x² - 4)/(x - 2)\n= lim (x->2) (x-2)(x+2)/(x-2)\n= lim (x->2) (x+2) = 4',
-      tip: 'Si al evaluar un límite obtienes 0/0, busca factorizar o racionalizar para eliminar la indeterminación.',
-      errors: [
-        'Evaluar directamente sin simplificar límites indeterminados.',
-        'Asumir que si f(a) no existe, el límite tampoco existe.',
-        'Olvidar comprobar los límites laterales para continuidad.'
-      ],
-      quiz: [
-        { question: '1. ¿Qué valor toma el límite lim (x->3) (x² - 9)/(x - 3)?', options: ['3', '6', 'Indefinido'], correct: 1 },
-        { question: '2. Una función f(x) es continua en x=a si:', options: ['f(a) existe', 'lim (x->a) f(x) existe', 'Ambas y son iguales'], correct: 2 }
-      ]
-    },
-    'definición de la derivada': {
-      guide: 'La derivada es el límite de la razón de cambio promedio cuando el intervalo de tiempo tiende a cero. Representa la pendiente de la recta tangente.',
-      code: 'f\'(x) = lim (h->0) [f(x+h) - f(x)] / h\nPara f(x) = x²:\nf\'(x) = lim [((x+h)² - x²) / h] = 2x',
-      tip: 'La derivada en un punto representa físicamente la velocidad instantánea.',
-      errors: [
-        'Olvidar dividir entre h al aplicar la definición de límite.',
-        'No calcular el límite, sino simplemente restar los valores.',
-        'Confundir derivada con la ecuación de la recta secante.'
-      ],
-      quiz: [
-        { question: '1. ¿Cuál es la interpretación geométrica de la derivada?', options: ['La pendiente de la recta tangente', 'El área bajo la curva', 'La intersección con el eje Y'], correct: 0 },
-        { question: '2. Si f(x) = x², ¿cuál es su derivada f\'(x)?', options: ['x', '2x', '2'], correct: 1 }
-      ]
-    }
-  },
-  'cálculo integral': {
-    'integrales definidas e indefinidas': {
-      guide: 'La integración es el proceso inverso de la derivación. Las integrales indefinidas incluyen una constante C, mientras que las definidas calculan un valor neto.',
-      code: '∫ x² dx = (x³ / 3) + C\n∫[0 a 2] x dx = [x²/2] de 0 a 2 = 2',
-      tip: '¡Nunca olvides colocar la constante de integración (+ C) en las integrales indefinidas!',
-      errors: [
-        'Olvidar la constante de integración (+ C).',
-        'No cambiar los límites de integración al hacer un cambio de variable.',
-        'Integrar incorrectamente las funciones trigonométricas base.'
-      ],
-      quiz: [
-        { question: '1. ¿Cuál es la integral indefinida de f(x) = 3x²?', options: ['x³ + C', '3x³ + C', '6x + C'], correct: 0 },
-        { question: '2. El teorema fundamental del cálculo conecta:', options: ['Límites y continuidad', 'Derivadas e integrales', 'Sumas y productos'], correct: 1 }
-      ]
-    }
-  },
-  'física': {
-    'cinemática (mru, caída libre, parabólico)': {
-      guide: 'La cinemática estudia el movimiento de los cuerpos sin atender a las causas que lo producen. Es clave identificar si la aceleración es constante o cero.',
-      code: 'MRU: d = v * t\nMRUA: d = v₀*t + 0.5*a*t²\nCaída libre: a = g = 9.8 m/s²',
-      tip: 'Dibuja siempre un sistema de referencia antes de definir los signos de tus velocidades y aceleraciones.',
-      errors: [
-        'Confundir velocidad constante (MRU) con velocidad variable (MRUA).',
-        'Equivocar el signo de la gravedad (g) según el marco de referencia.',
-        'Mezclar unidades de kilómetros por hora con metros por segundo.'
-      ],
-      quiz: [
-        { question: '1. Un objeto cae libremente desde el reposo. ¿Cuál es su aceleración?', options: ['Varía con la masa', '9.8 m/s²', 'Disminuye conforme cae'], correct: 1 },
-        { question: '2. En el MRU, la velocidad es:', options: ['Cero', 'Constante', 'Variable'], correct: 1 }
-      ]
-    }
-  }
-};
-
-// Fallback topic generator
-function getTopicContent(subjectName, topicName) {
-  const sName = subjectName.toLowerCase();
-  const tName = topicName.toLowerCase();
-
-  if (subjectContent[sName] && subjectContent[sName][tName]) {
-    return subjectContent[sName][tName];
-  }
-
-  // Find partial match
-  const matchedSubject = Object.keys(subjectContent).find(k => sName.includes(k) || k.includes(sName));
-  if (matchedSubject) {
-    const matchedTopic = Object.keys(subjectContent[matchedSubject]).find(k => tName.includes(k) || k.includes(tName));
-    if (matchedTopic) {
-      return subjectContent[matchedSubject][matchedTopic];
-    }
-  }
-
-  // Generic fallback
-  return {
-    guide: `Guía rápida de estudio para el tema "${topicName}". En esta sección aprenderás los conceptos clave, fórmulas y aplicaciones prácticas necesarias para dominar este tema de tu plan de ${subjectName}.`,
-    code: `// Fórmulas / Conceptos clave de: ${topicName}\n- Concepto 1: Definición y análisis conceptual básico.\n- Concepto 2: Métodos de resolución de problemas asociados.\n- Nota: Realiza ejercicios constantes para dominar la materia.`,
-    tip: `💡 Tip de Estudio: Dedica 25 minutos al estudio teórico de "${topicName}" y realiza al menos 3 ejercicios prácticos antes de autoevaluarte.`,
-    errors: [
-      `Intentar resolver problemas complejos de ${topicName} sin entender los fundamentos.`,
-      `Confundir términos y aplicar fórmulas incorrectas en el desarrollo.`,
-      `Olvidar comprobar y validar los resultados numéricos obtenidos.`
-    ],
-    quiz: [
-      {
-        question: `1. ¿Cuál es la mejor estrategia para aprender el tema "${topicName}"?`,
-        options: [
-          'Estudiar la teoría detalladamente y resolver problemas prácticos',
-          'Memorizar el temario la noche antes del examen',
-          'No realizar ejercicios prácticos'
-        ],
-        correct: 0
-      },
-      {
-        question: `2. ¿Por qué es importante identificar los errores comunes de ${topicName}?`,
-        options: [
-          'Para evitarlos proactivamente durante las evaluaciones',
-          'No es importante, los errores no importan',
-          'Para memorizar soluciones incorrectas'
-        ],
-        correct: 0
-      }
-    ]
-  };
-}
 
 export default function Study() {
   const { user } = useAuth();
-  const navigate = useNavigate();
 
-  // Redirect if not logged in
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-
-  // State
   const [planes, setPlanes] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [activeTopicId, setActiveTopicId] = useState(null);
-  
-  // Quiz and chat states
-  const [answers, setAnswers] = useState({});
+
+  const [contentFinished, setContentFinished] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [chatInput, setChatInput] = useState('');
-  const [messages, setMessages] = useState([]);
+
+  const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  // Fetch plans on mount/user change
+  const resetTopicFlow = useCallback(() => {
+    setContentFinished(false);
+    setShowQuiz(false);
+    setQuizSubmitted(false);
+    setAnswers({});
+  }, []);
+
   useEffect(() => {
     if (!user) return;
 
     const fetchPlanes = async () => {
       try {
         setLoading(true);
+        setError('');
         const res = await fetch(`/api/planes?usuario_id=${user.id}`);
         const data = await res.json();
 
         if (res.ok && data.success) {
           setPlanes(data.planes);
-          
-          // Select initial plan
+
           if (data.planes.length > 0) {
             const savedPlanId = localStorage.getItem('active_plan_id');
-            const foundPlan = data.planes.find(p => p.id === parseInt(savedPlanId));
+            const foundPlan = data.planes.find((p) => p.id === parseInt(savedPlanId, 10));
             const initialPlan = foundPlan || data.planes[0];
-            
+
             setSelectedPlan(initialPlan);
-            
-            // Set initial active topic (first incomplete topic, or first topic)
+
             const temas = initialPlan.temas || [];
-            const incomplete = temas.find(t => !t.completed);
+            const incomplete = temas.find((t) => !t.completed);
             const initialTopic = incomplete || temas[0];
             if (initialTopic) {
               setActiveTopicId(initialTopic.id);
@@ -217,112 +68,55 @@ export default function Study() {
     fetchPlanes();
   }, [user]);
 
-  // Handle plan switch
   const handleSelectPlan = (plan) => {
     setSelectedPlan(plan);
     localStorage.setItem('active_plan_id', plan.id);
-    
-    // Reset quiz and chat for new plan
-    setAnswers({});
-    setQuizSubmitted(false);
-    
+    resetTopicFlow();
+
     const temas = plan.temas || [];
-    const incomplete = temas.find(t => !t.completed);
+    const incomplete = temas.find((t) => !t.completed);
     const initialTopic = incomplete || temas[0];
-    if (initialTopic) {
-      setActiveTopicId(initialTopic.id);
-    } else {
-      setActiveTopicId(null);
-    }
+    setActiveTopicId(initialTopic ? initialTopic.id : null);
   };
 
-  // Reset quiz when topic changes
-  useEffect(() => {
-    setAnswers({});
-    setQuizSubmitted(false);
-    
-    if (selectedPlan && activeTopicId) {
-      const activeTopic = (selectedPlan.temas || []).find(t => t.id === activeTopicId);
-      if (activeTopic) {
-        setMessages([
-          {
-            from: 'bot',
-            text: `Hola, soy tu tutor IA. Pregúntame cualquier duda sobre el tema <strong>${activeTopic.name}</strong> de tu curso de <strong>${selectedPlan.materia}</strong>. 🤖`
-          }
-        ]);
-      }
-    }
-  }, [activeTopicId, selectedPlan]);
-
-  // Toggle topic completion in DB
-  const toggleTopicCompleted = async (topicId) => {
-    if (!selectedPlan) return;
-
-    const updatedTemas = selectedPlan.temas.map(t => {
-      if (t.id === topicId) {
-        return { ...t, completed: !t.completed };
-      }
-      return t;
-    });
-
-    // Optimistic UI update
-    const updatedPlan = { ...selectedPlan, temas: updatedTemas };
-    setSelectedPlan(updatedPlan);
-    setPlanes(prev => prev.map(p => p.id === selectedPlan.id ? updatedPlan : p));
-
-    try {
-      await fetch(`/api/planes/${selectedPlan.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ temas: updatedTemas })
-      });
-    } catch (err) {
-      console.error('Error al actualizar tema:', err);
-    }
+  const handleSelectTopic = (topicId) => {
+    setActiveTopicId(topicId);
+    resetTopicFlow();
   };
 
-  // Toggle plan active/finished status
   const togglePlanStatus = async (newStatus) => {
     if (!selectedPlan) return;
 
     try {
       const res = await fetch(`/api/planes/${selectedPlan.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ estado: newStatus })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: newStatus }),
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
-        // Update local list
         const updatedPlan = data.plan;
         setSelectedPlan(updatedPlan);
-        setPlanes(prev => prev.map(p => p.id === selectedPlan.id ? updatedPlan : p));
+        setPlanes((prev) => prev.map((p) => (p.id === selectedPlan.id ? updatedPlan : p)));
       }
     } catch (err) {
       console.error('Error al actualizar estado del plan:', err);
     }
   };
 
-  // Delete study plan
   const handleDeletePlan = async (planId, e) => {
     e.stopPropagation();
     if (!window.confirm('¿Estás seguro de que deseas eliminar este plan de estudio?')) return;
 
     try {
-      const res = await fetch(`/api/planes/${planId}`, {
-        method: 'DELETE'
-      });
+      const res = await fetch(`/api/planes/${planId}`, { method: 'DELETE' });
 
       if (res.ok) {
-        const updatedPlanes = planes.filter(p => p.id !== planId);
+        const updatedPlanes = planes.filter((p) => p.id !== planId);
         setPlanes(updatedPlanes);
-        
-        if (selectedPlan && selectedPlan.id === planId) {
+
+        if (selectedPlan?.id === planId) {
           if (updatedPlanes.length > 0) {
             handleSelectPlan(updatedPlanes[0]);
           } else {
@@ -336,107 +130,167 @@ export default function Study() {
     }
   };
 
-  // Quiz helper functions
+  const saveTopicProgress = async (topicId, progressData) => {
+    if (!selectedPlan) return;
+
+    const updatedTemas = selectedPlan.temas.map((t) =>
+      t.id === topicId ? { ...t, ...progressData } : t
+    );
+
+    const updatedPlan = { ...selectedPlan, temas: updatedTemas };
+    setSelectedPlan(updatedPlan);
+    setPlanes((prev) => prev.map((p) => (p.id === selectedPlan.id ? updatedPlan : p)));
+
+    try {
+      setSaving(true);
+      await fetch(`/api/planes/${selectedPlan.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ temas: updatedTemas }),
+      });
+    } catch (err) {
+      console.error('Error al guardar progreso:', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleAnswer = (qIndex, oIndex) => {
     if (quizSubmitted) return;
-    setAnswers(prev => ({ ...prev, [qIndex]: oIndex }));
+    setAnswers((prev) => ({ ...prev, [qIndex]: oIndex }));
   };
 
-  const submitQuiz = () => {
-    setQuizSubmitted(true);
-  };
+  const getScoreData = (content) => {
+    if (!content?.quiz?.length) return { score: 0, correct: 0, total: 0 };
 
-  // Chat message send
-  const sendChat = (e) => {
-    e.preventDefault();
-    if (!chatInput.trim() || !selectedPlan || !activeTopicId) return;
+    let correct = 0;
+    content.quiz.forEach((q, i) => {
+      if (answers[i] === q.correct) correct++;
+    });
 
-    const activeTopic = selectedPlan.temas.find(t => t.id === activeTopicId);
-    if (!activeTopic) return;
-
-    const userMsg = { from: 'user', text: chatInput };
-    
-    // Custom responsive tutor bot message
-    const botMsg = {
-      from: 'bot',
-      text: `Esa es una excelente pregunta sobre el tema <strong>${activeTopic.name}</strong>. Recuerda que la clave en ${selectedPlan.materia} es comprender la lógica detrás del concepto. Te sugiero repasar los errores comunes listados a la izquierda y realizar el test de autoevaluación. ⚡`
+    return {
+      score: Math.round((correct / content.quiz.length) * 100),
+      correct,
+      total: content.quiz.length,
     };
-
-    setMessages(prev => [...prev, userMsg, botMsg]);
-    setChatInput('');
   };
 
-  // Categorize plans
-  const activePlans = planes.filter(p => p.estado === 'activo');
-  const finishedPlans = planes.filter(p => p.estado === 'finalizado');
+  const getWeakAreas = (content) => {
+    const areas = new Set();
+    content.quiz.forEach((q, i) => {
+      if (answers[i] !== q.correct && q.weakArea) {
+        areas.add(q.weakArea);
+      }
+    });
+    return [...areas];
+  };
+
+  const getStrongAreas = (content) => {
+    const areas = new Set();
+    content.quiz.forEach((q, i) => {
+      if (answers[i] === q.correct && q.weakArea) {
+        areas.add(q.weakArea);
+      }
+    });
+    return [...areas];
+  };
+
+  const submitQuiz = async () => {
+    if (!activeTopic || !content) return;
+
+    const { score } = getScoreData(content);
+    const weakAreas = getWeakAreas(content);
+
+    setQuizSubmitted(true);
+
+    await saveTopicProgress(activeTopic.id, {
+      completed: true,
+      testSubmitted: true,
+      score,
+      weakAreas,
+    });
+  };
+
+  const handleStartQuiz = () => {
+    setContentFinished(true);
+    setShowQuiz(true);
+  };
+
+  const activePlans = planes.filter((p) => p.estado === 'activo');
+  const finishedPlans = planes.filter((p) => p.estado === 'finalizado');
 
   if (loading) {
     return (
-      <div className="study study-loading">
-        <div className="loading-spinner">Cargando tus planes de estudio...</div>
+      <div className="study study--loading">
+        <div className="study__loader">Cargando tus planes de estudio...</div>
       </div>
     );
   }
 
-  // Empty state if no plans exist
+  if (error) {
+    return (
+      <div className="study">
+        <div className="study__empty">
+          <p className="study__error-msg">{error}</p>
+          <button type="button" className="btn-secondary" onClick={() => window.location.reload()}>
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (planes.length === 0 || !selectedPlan) {
     return (
       <div className="study">
-        <div className="study__empty-state animate-in">
+        <div className="study__empty">
           <span className="study__empty-icon">📚</span>
           <h2>Aún no tienes planes de estudio</h2>
-          <p>Crea tu primer plan personalizado de ciencias básicas o materias personalizadas y organízate con IA.</p>
+          <p>Crea tu primer plan personalizado y comienza a estudiar con contenido universitario estructurado.</p>
           <Link to="/crear-plan" className="btn-primary">
-            Crear mi primer plan ⚡
+            Crear mi primer plan
           </Link>
         </div>
       </div>
     );
   }
 
-  // Active topic object
-  const activeTopic = (selectedPlan.temas || []).find(t => t.id === activeTopicId) || selectedPlan.temas[0];
-  
-  // Calculate completion percentage
-  const completedCount = (selectedPlan.temas || []).filter(t => t.completed).length;
+  const activeTopic =
+    (selectedPlan.temas || []).find((t) => t.id === activeTopicId) || selectedPlan.temas[0];
+
+  const completedCount = (selectedPlan.temas || []).filter((t) => t.completed).length;
   const totalCount = (selectedPlan.temas || []).length;
   const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const allTopicsCompleted = totalCount > 0 && completedCount === totalCount;
 
-  // Get topic contents
   const content = activeTopic ? getTopicContent(selectedPlan.materia, activeTopic.name) : null;
-
-  // Score calculation
-  const getScore = () => {
-    if (!content || !content.quiz) return 0;
-    let correct = 0;
-    content.quiz.forEach((q, i) => {
-      if (answers[i] === q.correct) correct++;
-    });
-    return Math.round((correct / content.quiz.length) * 100);
-  };
+  const scoreData = content ? getScoreData(content) : { score: 0, correct: 0, total: 0 };
+  const weakAreas = content && quizSubmitted ? getWeakAreas(content) : [];
+  const strongAreas = content && quizSubmitted ? getStrongAreas(content) : [];
 
   return (
     <div className="study">
       <div className="study__layout">
-        {/* SIDEBAR: COURSES & TOPICS LIST */}
         <aside className="study__sidebar">
-          
-          {/* ACTIVE COURSES */}
-          <div className="study__courses-section">
-            <h3>Cursos Activos</h3>
+          <section className="study__sidebar-section">
+            <h3 className="study__sidebar-title">Cursos activos</h3>
             {activePlans.length === 0 ? (
-              <p className="no-courses-lbl">No hay cursos activos</p>
+              <p className="study__sidebar-empty">No hay cursos activos</p>
             ) : (
-              activePlans.map(p => (
+              activePlans.map((p) => (
                 <div
                   key={p.id}
-                  className={`study__course-btn ${selectedPlan.id === p.id ? 'active' : ''}`}
+                  role="button"
+                  tabIndex={0}
+                  className={`study__course ${selectedPlan.id === p.id ? 'study__course--active' : ''}`}
                   onClick={() => handleSelectPlan(p)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSelectPlan(p)}
                 >
                   <span className="study__course-icon">{p.icon}</span>
                   <span className="study__course-name">{p.materia}</span>
                   <button
-                    className="study__course-del-btn"
+                    type="button"
+                    className="study__course-delete"
                     onClick={(e) => handleDeletePlan(p.id, e)}
                     title="Eliminar plan"
                   >
@@ -445,25 +299,28 @@ export default function Study() {
                 </div>
               ))
             )}
-          </div>
+          </section>
 
-          {/* FINISHED COURSES */}
-          <div className="study__courses-section">
-            <h3>Cursos Finalizados</h3>
+          <section className="study__sidebar-section">
+            <h3 className="study__sidebar-title">Cursos finalizados</h3>
             {finishedPlans.length === 0 ? (
-              <p className="no-courses-lbl">No hay cursos finalizados</p>
+              <p className="study__sidebar-empty">No hay cursos finalizados</p>
             ) : (
-              finishedPlans.map(p => (
+              finishedPlans.map((p) => (
                 <div
                   key={p.id}
-                  className={`study__course-btn ${selectedPlan.id === p.id ? 'active' : ''}`}
+                  role="button"
+                  tabIndex={0}
+                  className={`study__course ${selectedPlan.id === p.id ? 'study__course--active' : ''}`}
                   onClick={() => handleSelectPlan(p)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSelectPlan(p)}
                 >
                   <span className="study__course-icon">{p.icon}</span>
                   <span className="study__course-name">{p.materia}</span>
-                  <span className="study__course-badge">🏆</span>
+                  <span className="study__course-badge">✓</span>
                   <button
-                    className="study__course-del-btn"
+                    type="button"
+                    className="study__course-delete"
                     onClick={(e) => handleDeletePlan(p.id, e)}
                     title="Eliminar plan"
                   >
@@ -472,254 +329,373 @@ export default function Study() {
                 </div>
               ))
             )}
-          </div>
+          </section>
 
-          {/* ACTION BUTTON */}
-          <Link to="/crear-plan" className="btn-secondary sidebar-new-plan-btn">
-            ➕ Nuevo Plan de Estudio
+          <Link to="/crear-plan" className="btn-secondary study__new-plan">
+            + Nuevo plan
           </Link>
 
-          <div className="study__sidebar-divider"></div>
+          <div className="study__sidebar-divider" />
 
-          {/* SELECTION STATISTICS */}
-          <div className="study__subject-card">
-            <span className="study__subject-icon">{selectedPlan.icon}</span>
-            <h2>{selectedPlan.materia}</h2>
-            <p>Duración: {selectedPlan.tiempo_dias} días ({selectedPlan.horas_diarias} hrs/día)</p>
-
-            <div className="study__progress-stats">
-              <div className="study__stat">
-                <strong>{progress}%</strong>
-                <span>avance</span>
-              </div>
-              <div className="study__stat">
-                <strong>{totalCount}</strong>
-                <span>temas</span>
-              </div>
-            </div>
-
+          <div className="study__plan-card">
+            <span className="study__plan-icon">{selectedPlan.icon}</span>
+            <h2 className="study__plan-name">{selectedPlan.materia}</h2>
+            <p className="study__plan-meta">
+              {selectedPlan.tiempo_dias} días · {selectedPlan.horas_diarias} hrs/día
+            </p>
             <div className="study__progress-bar">
-              <div
-                className="study__progress-fill"
-                style={{ width: `${progress}%` }}
-              ></div>
+              <div className="study__progress-fill" style={{ width: `${progress}%` }} />
             </div>
+            <p className="study__progress-label">
+              {progress}% · {completedCount}/{totalCount} temas
+            </p>
           </div>
 
-          {/* TEMARIO */}
-          {selectedPlan.temas && selectedPlan.temas.length > 0 && (
-            <div className="study__topics">
-              <h3>Temario</h3>
+          {selectedPlan.temas?.length > 0 && (
+            <nav className="study__topics">
+              <h3 className="study__sidebar-title">Temario</h3>
               {selectedPlan.temas.map((topic) => (
                 <button
                   key={topic.id}
-                  className={`study__topic ${topic.completed ? 'completed' : ''} ${topic.id === activeTopicId ? 'active' : ''}`}
-                  onClick={() => setActiveTopicId(topic.id)}
+                  type="button"
+                  className={`study__topic ${topic.completed ? 'study__topic--done' : ''} ${topic.id === activeTopicId ? 'study__topic--active' : ''}`}
+                  onClick={() => handleSelectTopic(topic.id)}
                 >
-                  <span
-                    className="study__topic-badge"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleTopicCompleted(topic.id);
-                    }}
-                    title={topic.completed ? 'Desmarcar tema' : 'Completar tema'}
-                  >
-                    {topic.completed ? '✓' : topic.id}
-                  </span>
-                  <span className="topic-text-el">{topic.name}</span>
+                  <span className="study__topic-num">{topic.completed ? '✓' : topic.id}</span>
+                  <span className="study__topic-name">{topic.name}</span>
+                  {topic.score != null && (
+                    <span className="study__topic-score">{topic.score}%</span>
+                  )}
                 </button>
               ))}
-            </div>
+            </nav>
           )}
         </aside>
 
-        {/* STUDY CONTENT WINDOW */}
-        <main className="study__content">
-          {/* HERO DYNAMIC CARD */}
-          <div className="study__hero">
-            <div>
-              <span className="section-label">
-                {selectedPlan.estado === 'activo' ? '🔴 En Curso Activo' : '🏆 Curso Finalizado'}
-              </span>
-              <h2>{activeTopic ? activeTopic.name : 'Selecciona un tema'}</h2>
-              <p>
-                Ruta de aprendizaje configurada para {selectedPlan.materia}. Dedícale {selectedPlan.horas_diarias} horas hoy para completar tu objetivo.
-              </p>
+        <main className="study__main">
+          <header className="study__header">
+            <div className="study__header-info">
+              <span className="study__header-course">{selectedPlan.materia}</span>
+              <h1 className="study__header-topic">
+                {activeTopic ? activeTopic.name : 'Selecciona un tema'}
+              </h1>
+              <div className="study__header-progress">
+                <div className="study__progress-bar study__progress-bar--inline">
+                  <div className="study__progress-fill" style={{ width: `${progress}%` }} />
+                </div>
+                <span>{progress}% del curso</span>
+              </div>
             </div>
-
-            <div className="study__hero-actions">
+            <div className="study__header-actions">
               {selectedPlan.estado === 'activo' ? (
                 <button
-                  className="btn-primary study__btn-finish"
+                  type="button"
+                  className="btn-secondary study__status-btn"
                   onClick={() => togglePlanStatus('finalizado')}
                 >
-                  Finalizar Curso 🏆
+                  Finalizar curso
                 </button>
               ) : (
-                <>
-                  <span className="study__badge-completed">¡Finalizado! 🎓</span>
-                  <button
-                    className="btn-secondary"
-                    onClick={() => togglePlanStatus('activo')}
-                  >
-                    Reabrir Curso
-                  </button>
-                </>
+                <button
+                  type="button"
+                  className="btn-secondary study__status-btn"
+                  onClick={() => togglePlanStatus('activo')}
+                >
+                  Reabrir curso
+                </button>
               )}
             </div>
-          </div>
+          </header>
 
-          {/* STUDY MATERIAL GRID */}
-          {activeTopic && content ? (
-            <div className="study__grid">
-              
-              {/* GUIDE */}
-              <article className="study__panel study__panel--guide">
-                <div className="study__panel-header">
-                  <h3>📖 Guía Rápida</h3>
-                  <span className="study__panel-tag">Conceptos Clave</span>
-                </div>
-                <p>{content.guide}</p>
-                {content.code && (
-                  <div className="study__code-box">
-                    <pre><code>{content.code}</code></pre>
+          {allTopicsCompleted && selectedPlan.estado === 'activo' && (
+            <div className="study__completion-banner">
+              <p>Ya completaste todos los temas. Puedes finalizar el curso.</p>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => togglePlanStatus('finalizado')}
+              >
+                Finalizar curso
+              </button>
+            </div>
+          )}
+
+          {activeTopic && content && !showQuiz && (
+            <article className="study__guide">
+              <section className="study__section">
+                <h2 className="study__section-title">Objetivo del tema</h2>
+                <p className="study__text">{content.objective}</p>
+              </section>
+
+              <section className="study__section">
+                <h2 className="study__section-title">Explicación</h2>
+                <p className="study__text">{content.explanation}</p>
+              </section>
+
+              {content.keyConcepts?.length > 0 && (
+                <section className="study__section">
+                  <h2 className="study__section-title">Conceptos clave</h2>
+                  <ul className="study__list">
+                    {content.keyConcepts.map((concept, i) => (
+                      <li key={i}>{concept}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {content.formulas?.length > 0 && (
+                <section className="study__section">
+                  <h2 className="study__section-title">Fórmulas y definiciones</h2>
+                  <div className="study__formulas">
+                    {content.formulas.map((f, i) => (
+                      <pre key={i} className="study__formula">{f}</pre>
+                    ))}
                   </div>
-                )}
-                <div className="study__tip">
-                  {content.tip}
-                </div>
-              </article>
+                </section>
+              )}
 
-              {/* COMMON ERRORS */}
-              <article className="study__panel study__panel--errors">
-                <div className="study__panel-header">
-                  <h3>⚠️ Errores Comunes</h3>
-                  <span className="study__panel-tag study__panel-tag--warn">Evita esto</span>
-                </div>
-                <ul className="study__error-list">
-                  {content.errors.map((errText, idx) => (
-                    <li key={idx}>{errText}</li>
+              {content.solvedExercises?.length > 0 && (
+                <section className="study__section">
+                  <h2 className="study__section-title">Ejercicios resueltos</h2>
+                  {content.solvedExercises.map((ex, i) => (
+                    <div key={i} className="study__exercise">
+                      <div className="study__exercise-header">
+                        <h3>{ex.title}</h3>
+                        <span className="study__badge">{ex.difficulty}</span>
+                      </div>
+                      <div className="study__exercise-problem">
+                        <strong>Problema:</strong>
+                        <pre>{ex.problem}</pre>
+                      </div>
+                      <div className="study__exercise-solution">
+                        <strong>Solución:</strong>
+                        <ol>
+                          {ex.solution.map((step, si) => (
+                            <li key={si}>{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                      <p className="study__exercise-answer">
+                        <strong>Respuesta:</strong> {ex.finalAnswer}
+                      </p>
+                      {ex.sourceUrl && (
+                        <a
+                          href={ex.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="study__source-link"
+                        >
+                          Fuente: {ex.sourceName}
+                        </a>
+                      )}
+                    </div>
                   ))}
-                </ul>
-              </article>
+                </section>
+              )}
 
-              {/* TUTOR CHAT AI */}
-              <article className="study__panel study__panel--chat">
-                <div className="study__panel-header">
-                  <h3>🤖 Tutor Inteligente IA</h3>
-                  <span className="study__panel-tag study__panel-tag--success">Activo</span>
-                </div>
-                <div className="study__chat-box">
-                  {messages.map((msg, i) => (
-                    <div
-                      key={i}
-                      className={`study__chat-msg study__chat-msg--${msg.from}`}
-                      dangerouslySetInnerHTML={{ __html: msg.text }}
-                    />
-                  ))}
-                </div>
-                <form className="study__chat-input" onSubmit={sendChat}>
-                  <input
-                    type="text"
-                    placeholder={`Pregúntale al tutor sobre ${activeTopic.name}...`}
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                  />
-                  <button type="submit" className="btn-primary">Enviar</button>
-                </form>
-              </article>
+              {content.videos?.length > 0 && (
+                <section className="study__section">
+                  <h2 className="study__section-title">Videos de apoyo</h2>
+                  <div className="study__resources">
+                    {content.videos.map((vid, i) => (
+                      <a
+                        key={i}
+                        href={vid.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="study__resource"
+                      >
+                        <span className="study__resource-icon">▶</span>
+                        <div>
+                          <strong>{vid.title}</strong>
+                          {vid.platform && <span>{vid.platform}</span>}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-              {/* QUIZ PANEL */}
-              <article className="study__panel study__panel--quiz">
-                <div className="study__panel-header">
-                  <h3>📝 Test de Autoevaluación</h3>
-                  <span className="study__panel-tag">{content.quiz.length} preguntas</span>
-                </div>
+              {content.links?.length > 0 && (
+                <section className="study__section">
+                  <h2 className="study__section-title">Links de apoyo</h2>
+                  <div className="study__resources">
+                    {content.links.map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="study__resource"
+                      >
+                        <span className="study__resource-icon">↗</span>
+                        <div>
+                          <strong>{link.title}</strong>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-                <div className="study__quiz-questions">
+              <footer className="study__guide-footer">
+                <button type="button" className="btn-primary study__start-quiz" onClick={handleStartQuiz}>
+                  Ya terminé de estudiar, hacer test
+                </button>
+              </footer>
+            </article>
+          )}
+
+          {activeTopic && content && showQuiz && (
+            <div className="study__quiz-area">
+              {!quizSubmitted ? (
+                <section className="study__section study__quiz">
+                  <h2 className="study__section-title">Test del tema</h2>
+                  <p className="study__quiz-intro">
+                    Responde las {content.quiz.length} preguntas. Necesitas contestar todas para enviar.
+                  </p>
+
                   {content.quiz.map((q, qi) => (
                     <div key={qi} className="study__question">
                       <p className="study__question-text">{q.question}</p>
-                      {q.options.map((opt, oi) => {
-                        let optClass = 'study__option';
-                        if (answers[qi] === oi) optClass += ' selected';
-                        if (quizSubmitted) {
-                          if (oi === q.correct) optClass += ' correct';
-                          else if (answers[qi] === oi) optClass += ' wrong';
-                        }
-                        return (
-                          <label key={oi} className={optClass}>
+                      <div className="study__options">
+                        {q.options.map((opt, oi) => (
+                          <label
+                            key={oi}
+                            className={`study__option ${answers[qi] === oi ? 'study__option--selected' : ''}`}
+                          >
                             <input
                               type="radio"
                               name={`q${qi}`}
                               checked={answers[qi] === oi}
                               onChange={() => handleAnswer(qi, oi)}
-                              disabled={quizSubmitted}
                             />
-                            <span className="study__option-radio"></span>
+                            <span className="study__option-marker" />
                             {opt}
                           </label>
-                        );
-                      })}
+                        ))}
+                      </div>
                     </div>
                   ))}
-                </div>
 
-                {!quizSubmitted ? (
-                  <button
-                    className="btn-primary"
-                    onClick={submitQuiz}
-                    disabled={Object.keys(answers).length < content.quiz.length}
-                  >
-                    Finalizar test
-                  </button>
-                ) : (
-                  <div className="study__quiz-result">
-                    Tu resultado: <strong>{getScore()}%</strong>
+                  <div className="study__quiz-actions">
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={resetTopicFlow}
+                    >
+                      Volver al contenido
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      onClick={submitQuiz}
+                      disabled={Object.keys(answers).length < content.quiz.length || saving}
+                    >
+                      {saving ? 'Guardando...' : 'Enviar test'}
+                    </button>
                   </div>
-                )}
-              </article>
-
-              {/* DIAGNOSIS PANEL */}
-              <article className="study__panel study__panel--diagnosis">
-                <div className="study__panel-header">
-                  <h3>🔍 Diagnóstico IA</h3>
-                  <span className="study__panel-tag">Recomendaciones</span>
-                </div>
-
-                {quizSubmitted ? (
-                  <>
-                    <p className="study__score">
-                      Resultado estimado: <strong>{getScore()}%</strong>
+                </section>
+              ) : (
+                <div className="study__results">
+                  <section className="study__section study__result-card">
+                    <h2 className="study__section-title">Resultado</h2>
+                    <p className="study__result-score">
+                      Obtuviste <strong>{scoreData.score}%</strong> ({scoreData.correct} de {scoreData.total} correctas)
                     </p>
-                    {getScore() < 80 ? (
-                      <>
-                        <div className="study__weak-item">
-                          <h4>Punto débil detectado</h4>
-                          <p>Dificultad en aplicar los métodos prácticos de {activeTopic.name}.</p>
+                  </section>
+
+                  {content.quiz.map((q, qi) => {
+                    const isCorrect = answers[qi] === q.correct;
+                    return (
+                      <div
+                        key={qi}
+                        className={`study__question study__question--review ${isCorrect ? 'study__question--correct' : 'study__question--wrong'}`}
+                      >
+                        <p className="study__question-text">
+                          {isCorrect ? '✓' : '✗'} {q.question}
+                        </p>
+                        <div className="study__options">
+                          {q.options.map((opt, oi) => {
+                            let cls = 'study__option';
+                            if (oi === q.correct) cls += ' study__option--correct';
+                            else if (answers[qi] === oi) cls += ' study__option--wrong';
+                            return (
+                              <div key={oi} className={cls}>
+                                {opt}
+                                {oi === q.correct && <span className="study__option-tag">Correcta</span>}
+                              </div>
+                            );
+                          })}
                         </div>
-                        <div className="study__weak-item">
-                          <h4>Refuerzo recomendado</h4>
-                          <p>Repasa los ejercicios resueltos en la Guía y discútelo con el Tutor IA.</p>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="study__weak-item study__weak-item--success">
-                        <h4>¡Excelente dominio!</h4>
-                        <p>Has comprendido perfectamente los conceptos clave de {activeTopic.name}. ¡Sigue así!</p>
+                        {q.explanation && (
+                          <p className="study__explanation">{q.explanation}</p>
+                        )}
                       </div>
-                    )}
-                  </>
-                ) : (
-                  <p className="study__pending">
-                    Completa el test para ver tu diagnóstico personalizado.
-                  </p>
-                )}
-              </article>
+                    );
+                  })}
+
+                  <section className="study__section study__result-card">
+                    <h2 className="study__section-title">Resumen de desempeño</h2>
+                    <div className="study__result-grid">
+                      <div className="study__result-item study__result-item--strong">
+                        <h3>Puntos fuertes</h3>
+                        {strongAreas.length > 0 ? (
+                          <ul>
+                            {strongAreas.map((a, i) => (
+                              <li key={i}>{a}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>Repasa el contenido para identificar fortalezas.</p>
+                        )}
+                      </div>
+                      <div className="study__result-item study__result-item--weak">
+                        <h3>Puntos débiles detectados</h3>
+                        {weakAreas.length > 0 ? (
+                          <ul>
+                            {weakAreas.map((a, i) => (
+                              <li key={i}>{a}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>No se detectaron áreas débiles. ¡Excelente!</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="study__result-item study__result-item--review">
+                      <h3>Qué repasar ahora</h3>
+                      {weakAreas.length > 0 ? (
+                        <ul>
+                          {weakAreas.map((a, i) => (
+                            <li key={i}>
+                              Revisa la sección de <strong>{a}</strong> en la guía de estudio y los ejercicios resueltos.
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>Continúa con el siguiente tema del temario.</p>
+                      )}
+                    </div>
+                  </section>
+
+                  <div className="study__quiz-actions">
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={resetTopicFlow}
+                    >
+                      Volver a estudiar
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="study__select-prompt">
-              <h3>Selecciona un tema del temario para comenzar a estudiar.</h3>
+          )}
+
+          {!activeTopic && (
+            <div className="study__prompt">
+              <p>Selecciona un tema del temario para comenzar.</p>
             </div>
           )}
         </main>
