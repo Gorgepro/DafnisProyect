@@ -826,3 +826,482 @@
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   NEW STYLES: TOPIC TABS, AI GENERATION LOADER & INTERACTIVE DIDACTIC GAMES
+   ========================================================================= */
+
+/* 1. Horizontal Topic Tabs */
+.study__tabs-nav {
+  display: flex;
+  gap: var(--space-2);
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: var(--space-6);
+  padding-bottom: 1px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for clean UI */
+}
+
+.study__tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.study__tab-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  margin-bottom: -2px;
+}
+
+.study__tab-btn:hover {
+  color: var(--text-primary);
+  border-bottom-color: var(--border-color-hover);
+}
+
+.study__tab-btn--active {
+  color: var(--primary-700);
+  border-bottom-color: var(--primary-500);
+  background: rgba(var(--primary-rgb), 0.04);
+}
+
+.study__tab-status-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(var(--primary-rgb), 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.study__tab-btn--completed .study__tab-status-icon {
+  background: rgba(81, 207, 102, 0.1);
+  border-color: rgba(81, 207, 102, 0.25);
+  color: var(--success);
+}
+
+.study__tab-btn--active .study__tab-status-icon {
+  border-color: rgba(var(--primary-rgb), 0.35);
+  color: var(--primary-600);
+}
+
+.study__tab-score-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  background: rgba(var(--primary-rgb), 0.08);
+  color: var(--primary-700);
+  border-radius: var(--radius-sm);
+}
+
+.study__tab-btn--completed {
+  color: var(--success);
+}
+
+/* 2. AI Generator Loader Card */
+.study__ai-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-8) var(--space-6);
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--primary-rgb), 0.1);
+  border-radius: var(--radius-xl);
+  margin: var(--space-5) 0;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.03);
+}
+
+.study__ai-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(var(--primary-rgb), 0.1);
+  border-left-color: var(--primary-500);
+  border-radius: 50%;
+  animation: study-spin 1s linear infinite;
+  margin-bottom: var(--space-4);
+}
+
+.study__ai-loading h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2);
+}
+
+.study__ai-loading p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 480px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes study-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 3. Practical Exercises Interactive Mechanics */
+.study__exercise--practical {
+  border-left: 4px solid var(--primary-400);
+}
+
+.study__section-subtitle {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-top: calc(-1 * var(--space-2));
+  margin-bottom: var(--space-4);
+}
+
+.practical-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.study__btn-action {
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.study__btn-action--hint {
+  background: rgba(var(--primary-rgb), 0.06);
+  border-color: rgba(var(--primary-rgb), 0.12);
+  color: var(--primary-700);
+}
+
+.study__btn-action--hint:hover {
+  background: rgba(var(--primary-rgb), 0.12);
+}
+
+.study__btn-action--solution {
+  background: var(--primary-500);
+  color: #ffffff;
+}
+
+.study__btn-action--solution:hover {
+  background: var(--primary-600);
+}
+
+.exercise-hint {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255, 192, 72, 0.08);
+  border-left: 3px solid #ffc048;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.exercise-solution-reveal {
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(81, 207, 102, 0.05);
+  border-left: 3px solid var(--success);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 4. Mini Games Architecture & Design */
+.study__section--games {
+  border-color: rgba(var(--primary-rgb), 0.15);
+  background: rgba(var(--primary-rgb), 0.01);
+}
+
+.study__games {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.study__games-nav {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--bg-primary);
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  align-self: flex-start;
+}
+
+.study__games-tab {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.study__games-tab:hover {
+  color: var(--text-primary);
+}
+
+.study__games-tab--active {
+  background: var(--bg-card);
+  color: var(--primary-700);
+  box-shadow: var(--shadow-sm);
+}
+
+.study__games-board {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  min-height: 250px;
+}
+
+.game-instruction {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-4);
+  font-style: italic;
+}
+
+/* Flashcards Game UI */
+.flashcards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  perspective: 1000px;
+}
+
+.flashcard-scene {
+  height: 180px;
+  cursor: pointer;
+}
+
+.flashcard {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.flashcard.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard__face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.flashcard__face--front {
+  background: var(--bg-card);
+}
+
+.flashcard__face--back {
+  background: rgba(var(--primary-rgb), 0.04);
+  border-color: rgba(var(--primary-rgb), 0.2);
+  transform: rotateY(180deg);
+}
+
+.flashcard-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.flashcard-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: auto 0;
+}
+
+.flashcard-action {
+  font-size: 0.72rem;
+  color: var(--primary-500);
+  font-weight: 600;
+}
+
+/* Matching Game UI */
+.game-success-message {
+  background: rgba(81, 207, 102, 0.08);
+  border: 1px solid rgba(81, 207, 102, 0.25);
+  color: var(--success);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.matching-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+.matching-column h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-3);
+  font-weight: 700;
+}
+
+.matching-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.matching-item {
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  line-height: 1.4;
+}
+
+.matching-item:hover:not(:disabled) {
+  border-color: var(--border-color-hover);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.matching-item--selected {
+  border-color: rgba(var(--primary-rgb), 0.5) !important;
+  background: rgba(var(--primary-rgb), 0.06) !important;
+  color: var(--primary-700) !important;
+  font-weight: 600;
+}
+
+.matching-item--matched {
+  border-color: rgba(81, 207, 102, 0.25) !important;
+  background: rgba(81, 207, 102, 0.04) !important;
+  color: rgba(81, 207, 102, 0.8) !important;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.matching-item--wrong {
+  border-color: rgba(255, 107, 107, 0.5) !important;
+  background: rgba(255, 107, 107, 0.08) !important;
+  color: var(--error) !important;
+  animation: study-shake 0.3s ease-in-out;
+}
+
+@keyframes study-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* 5. Quiz Section Completed Banner */
+.study__quiz-completed-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(var(--primary-rgb), 0.05);
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
+  border-radius: var(--radius-lg);
+  width: 100%;
+}
+
+.banner-icon {
+  font-size: 2.2rem;
+}
+
+.study__quiz-completed-banner h3 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.study__quiz-completed-banner p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.study__quiz-completed-banner button {
+  margin-left: auto;
+}
+
+.study__result-header-card {
+  background: rgba(var(--primary-rgb), 0.05);
+  border: 1px solid rgba(var(--primary-rgb), 0.12);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .matching-columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .study__quiz-completed-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .study__quiz-completed-banner button {
+    margin-left: 0;
+    width: 100%;
+  }
+}

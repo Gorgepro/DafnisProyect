@@ -71,7 +71,7 @@ export default function CreatePlan() {
   const [addedSubjects, setAddedSubjects] = useState([]);
   const [selectedSubjectId, setSelectedSubjectId] = useState('');
   const [selectedTopics, setSelectedTopics] = useState([]);
-  const [days, setDays] = useState(7);
+  const [days, setDays] = useState(5);
   const [hours, setHours] = useState(2);
   
   // Custom subject inputs
@@ -513,14 +513,14 @@ export default function CreatePlan() {
                     id="duration-days"
                     type="range"
                     min="1"
-                    max="30"
+                    max="5"
                     value={days}
                     onChange={(e) => setDays(e.target.value)}
                   />
                   <div className="range-labels">
                     <span>1 día</span>
-                    <span>15 días</span>
-                    <span>30 días</span>
+                    <span>3 días</span>
+                    <span>5 días</span>
                   </div>
                 </div>
 
@@ -530,14 +530,13 @@ export default function CreatePlan() {
                     id="daily-hours"
                     type="range"
                     min="1"
-                    max="8"
+                    max="2"
                     value={hours}
                     onChange={(e) => setHours(e.target.value)}
                   />
                   <div className="range-labels">
                     <span>1 hr</span>
-                    <span>4 hrs</span>
-                    <span>8 hrs</span>
+                    <span>2 hrs</span>
                   </div>
                 </div>
               </div>
