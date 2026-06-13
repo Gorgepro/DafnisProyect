@@ -186,7 +186,7 @@ export default function Landing() {
         <div className="container">
           <div className="footer__inner">
             <span className="navbar__logo-icon">✦</span>
-            <p>© 2026 Estudia Hoy IA — Proyecto para hackatón</p>
+            <p>© 2026 DafnisStudy</p>
           </div>
         </div>
       </footer>

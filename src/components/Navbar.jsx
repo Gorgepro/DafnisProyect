@@ -25,7 +25,7 @@ export default function Navbar() {
       <div className="navbar__inner">
         <Link to="/" className="navbar__logo">
           <span className="navbar__logo-icon">✦</span>
-          <span className="navbar__logo-text">DafnisStudy</span>
+          <span className="navbar__logo-text">DafniStudy</span>
         </Link>
 
         <button
