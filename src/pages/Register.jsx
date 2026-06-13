@@ -13,7 +13,7 @@ export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -28,7 +28,7 @@ export default function Register() {
       return;
     }
 
-    const result = register(nombre, correo, contrasena);
+    const result = await register(nombre, correo, contrasena);
     if (result.success) {
       setSuccess('¡Cuenta creada! Redirigiendo al login...');
       setTimeout(() => navigate('/login'), 1500);

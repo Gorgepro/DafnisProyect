@@ -10,11 +10,11 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError('');
 
-    const result = login(correo, contrasena);
+    const result = await login(correo, contrasena);
     if (result.success) {
       navigate('/');
     } else {

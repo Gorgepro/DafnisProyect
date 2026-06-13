@@ -17,57 +17,55 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  function getUsers() {
+  async function register(nombre, correo, contrasena) {
     try {
-      return JSON.parse(localStorage.getItem('estudia_users') || '[]');
-    } catch {
-      return [];
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nombre, correo, contrasena }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message || 'Error al crear la cuenta.' };
+      }
+    } catch (error) {
+      console.error('Error de red al registrar:', error);
+      return { success: false, message: 'No se pudo conectar con el servidor.' };
     }
   }
 
-  function saveUsers(users) {
-    localStorage.setItem('estudia_users', JSON.stringify(users));
-  }
+  async function login(correo, contrasena) {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ correo, contrasena }),
+      });
 
-  function register(nombre, correo, contrasena) {
-    const users = getUsers();
-
-    // Check if email already exists
-    if (users.find(u => u.correo === correo)) {
-      return { success: false, message: 'Este correo ya está registrado.' };
+      const data = await response.json();
+      if (response.ok && data.success) {
+        const sessionData = {
+          id: data.user.id,
+          nombre: data.user.nombre,
+          correo: data.user.correo,
+        };
+        setUser(sessionData);
+        sessionStorage.setItem('estudia_session', JSON.stringify(sessionData));
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message || 'Error al iniciar sesión.' };
+      }
+    } catch (error) {
+      console.error('Error de red al iniciar sesión:', error);
+      return { success: false, message: 'No se pudo conectar con el servidor.' };
     }
-
-    const newUser = {
-      id: Date.now(),
-      nombre,
-      correo,
-      // Simple encoding for demo (NOT real security)
-      contrasena: btoa(contrasena),
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-
-    return { success: true, message: 'Cuenta creada correctamente.' };
-  }
-
-  function login(correo, contrasena) {
-    const users = getUsers();
-    const found = users.find(u => u.correo === correo);
-
-    if (!found) {
-      return { success: false, message: 'El usuario no existe.' };
-    }
-
-    if (found.contrasena !== btoa(contrasena)) {
-      return { success: false, message: 'Contraseña incorrecta.' };
-    }
-
-    const sessionData = { id: found.id, nombre: found.nombre, correo: found.correo };
-    setUser(sessionData);
-    sessionStorage.setItem('estudia_session', JSON.stringify(sessionData));
-
-    return { success: true, message: 'Sesión iniciada.' };
   }
 
   function logout() {
