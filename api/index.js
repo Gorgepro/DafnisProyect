@@ -464,6 +464,24 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
   }
 
+  const supportVideos = [
+    {
+      title: `Explicación completa de ${topicName} - ${materia}`,
+      url: `https://www.youtube.com/results?search_query=${encodeURIComponent(topicName + ' ' + materia + ' explicación universitaria')}`,
+      description: `Video explicativo con los fundamentos teóricos de ${topicName}.`
+    },
+    {
+      title: `Ejercicios resueltos de ${topicName}`,
+      url: `https://www.youtube.com/results?search_query=${encodeURIComponent(topicName + ' ' + materia + ' ejercicios resueltos')}`,
+      description: `Práctica guiada con ejercicios paso a paso de ${topicName}.`
+    },
+    {
+      title: `${topicName} - Conceptos avanzados y aplicaciones`,
+      url: `https://www.youtube.com/results?search_query=${encodeURIComponent(topicName + ' ' + materia + ' conceptos avanzados')}`,
+      description: `Profundización en los conceptos clave y aplicaciones prácticas.`
+    }
+  ];
+
   return {
     objective,
     explanation,
@@ -472,7 +490,8 @@ function generateFallbackContent(materia, topicName, totalHours) {
     solvedExercises,
     practicalExercises,
     miniGames,
-    quiz
+    quiz,
+    supportVideos
   };
 }
 
@@ -487,7 +506,8 @@ async function generateTopicContentWithOpenAI(materia, topicName, totalHours) {
     const systemPrompt = `Eres un tutor de ciencias e ingeniería universitario de primer nivel. Tu tarea es generar material de estudio personalizado y de alta calidad para un tema específico de una asignatura.
 Responde ÚNICAMENTE con un objeto JSON válido y estructurado según el esquema indicado.
 El contenido debe adaptarse dinámicamente al tiempo disponible del usuario. Si el tiempo total de estudio es bajo (ej. 1-2 horas), sé muy sintético y directo a las fórmulas y conceptos clave. Si es alto, expande las explicaciones y la teoría.
-Debes incluir ejercicios prácticos adicionales y al menos 2 mini-juegos interactivos para hacer el aprendizaje didáctico.`;
+Debes incluir ejercicios prácticos adicionales y al menos 2 mini-juegos interactivos para hacer el aprendizaje didáctico.
+Además, DEBES incluir al menos 3 videos de apoyo de YouTube relevantes al tema. Para cada video, proporciona un título descriptivo y una URL de búsqueda de YouTube con el formato https://www.youtube.com/results?search_query=TERMINOS+DE+BUSQUEDA que lleve al estudiante directamente a resultados relevantes del tema.`;
 
     const userPrompt = `Asignatura: "${materia}"
 Tema a generar: "${topicName}"
@@ -539,10 +559,17 @@ Esquema JSON requerido:
       "explanation": "Explicación de por qué es la correcta (string)",
       "weakArea": "Tema de debilidad a repasar si se falla (string)"
     }
+  ],
+  "supportVideos": [
+    {
+      "title": "Título descriptivo del video de apoyo (string)",
+      "url": "https://www.youtube.com/results?search_query=terminos+de+busqueda+relevantes (string)",
+      "description": "Breve descripción de qué cubre el video y por qué es útil (string)"
+    }
   ]
 }
 
-Asegúrate de agregar al menos 3 flashcards y 4 parejas en el matching game. Genera de 3 a 5 preguntas en el quiz. IMPORTANTE: Las preguntas del quiz NO deben ser obvias ni de simple memorización; deben requerir análisis lógico, deducción matemática o conceptual y hacer pensar al alumno. Devuelve solo el JSON válido sin bloques de código markdown (\`\`\`json) ni texto adicional.`;
+Asegúrate de agregar al menos 3 flashcards y 4 parejas en el matching game. Genera de 3 a 5 preguntas en el quiz. IMPORTANTE: Las preguntas del quiz NO deben ser obvias ni de simple memorización; deben requerir análisis lógico, deducción matemática o conceptual y hacer pensar al alumno. DEBES incluir al menos 3 videos de apoyo en supportVideos con URLs de búsqueda de YouTube relevantes al tema y a la materia. Devuelve solo el JSON válido sin bloques de código markdown (\`\`\`json) ni texto adicional.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

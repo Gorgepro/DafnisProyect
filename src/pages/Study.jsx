@@ -773,7 +773,33 @@ export default function Study() {
                 </section>
               )}
 
-              {/* 5. EJERCICIOS RESUELTOS */}
+              {/* 5. VIDEOS DE APOYO */}
+              {generatedContent.supportVideos?.length > 0 && (
+                <section className="study__section study__section--videos">
+                  <h2 className="study__section-title">🎬 Videos de Apoyo</h2>
+                  <p className="study__section-subtitle">Videos recomendados de YouTube para reforzar tu comprensión del tema.</p>
+                  <div className="study__videos-grid">
+                    {generatedContent.supportVideos.map((video, i) => (
+                      <a
+                        key={i}
+                        href={video.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="study__video-card"
+                      >
+                        <div className="study__video-icon">▶</div>
+                        <div className="study__video-info">
+                          <h4 className="study__video-title">{video.title}</h4>
+                          <p className="study__video-desc">{video.description}</p>
+                        </div>
+                        <span className="study__video-external">↗</span>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* 6. EJERCICIOS RESUELTOS */}
               {generatedContent.solvedExercises?.length > 0 && (
                 <section className="study__section">
                   <h2 className="study__section-title">✅ Ejercicios Resueltos</h2>
@@ -803,7 +829,7 @@ export default function Study() {
                 </section>
               )}
 
-              {/* 6. EJERCICIOS PRÁCTICOS */}
+              {/* 7. EJERCICIOS PRÁCTICOS */}
               {generatedContent.practicalExercises?.length > 0 && (
                 <section className="study__section">
                   <h2 className="study__section-title">✍️ Ejercicios Prácticos</h2>
@@ -814,7 +840,7 @@ export default function Study() {
                 </section>
               )}
 
-              {/* 7. MINI JUEGOS INTERACTIVOS */}
+              {/* 8. MINI JUEGOS INTERACTIVOS */}
               {generatedContent.miniGames?.length > 0 && (
                 <section className="study__section study__section--games">
                   <h2 className="study__section-title">🎮 Mini-Juegos Didácticos</h2>
@@ -822,7 +848,7 @@ export default function Study() {
                 </section>
               )}
 
-              {/* 8. TEST DE AUTOEVALUACIÓN */}
+              {/* 9. TEST DE AUTOEVALUACIÓN */}
               {generatedContent.quiz?.length > 0 && (
                 <section className="study__section study__section--quiz">
                   <h2 className="study__section-title">📝 Test de Autoevaluación</h2>
