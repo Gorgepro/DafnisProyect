@@ -43,7 +43,6 @@ export default function Navbar() {
             Inicio
           </Link>
           <a href="/#materias" className="navbar__link">Materias</a>
-          <a href="/#funciona" className="navbar__link">Cómo funciona</a>
           <a href="/#beneficios" className="navbar__link">Beneficios</a>
 
           <div className="navbar__actions">

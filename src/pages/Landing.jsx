@@ -92,7 +92,7 @@ export default function Landing() {
           <div className="problem__icon">🎓</div>
           <h2>Deja de estudiar sin orden</h2>
           <p>
-            Estudia Hoy IA te ayuda a decidir qué repasar primero según tu examen,
+            DafniStudy te ayuda a decidir qué repasar primero según tu examen,
             tus temas difíciles y el tiempo que tienes disponible.
           </p>
         </div>

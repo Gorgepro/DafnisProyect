@@ -47,7 +47,7 @@ export default function Register() {
       <div className="auth__card">
         <Link to="/" className="auth__logo">
           <span className="auth__logo-icon">✦</span>
-          <span className="auth__logo-text">Estudia Hoy IA</span>
+          <span className="auth__logo-text">DafniStudy</span>
         </Link>
 
         <h1 className="auth__title">Crear Cuenta</h1>

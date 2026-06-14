@@ -676,15 +676,7 @@ export default function Study() {
                 <span>{progress}% del curso</span>
               </div>
             </div>
-            <div className="study__header-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <button
-                type="button"
-                className="study__btn-theme"
-                onClick={toggleTheme}
-                title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
-              >
-                {theme === 'light' ? '🌙' : '☀️'}
-              </button>
+            <div className="study__header-actions">
               {selectedPlan.estado === 'activo' ? (
                 <button
                   type="button"
@@ -995,6 +987,14 @@ export default function Study() {
           )}
         </main>
       </div>
+      <button
+        type="button"
+        className="study__btn-theme-floating"
+        onClick={toggleTheme}
+        title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+      >
+        {theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro'}
+      </button>
     </div>
   );
 }
