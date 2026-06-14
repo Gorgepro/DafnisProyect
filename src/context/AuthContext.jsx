@@ -71,8 +71,6 @@ export function AuthProvider({ children }) {
   function logout() {
     setUser(null);
     sessionStorage.removeItem('estudia_session');
-    localStorage.removeItem('active_plan_id');
-    window.location.href = '/login';
   }
 
   return (
