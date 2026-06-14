@@ -223,6 +223,26 @@ function generateFallbackContent(materia, topicName, totalHours) {
       question: `¿Cómo aplicarías los conceptos de ${topicName} para resolver un caso real?`,
       hint: 'Piensa en las condiciones iniciales y las leyes de conservación.',
       solution: 'Se deben plantear las ecuaciones, aplicar las condiciones de borde e integrar.'
+    },
+    {
+      question: `Diseñar un diagrama de flujo simple para el proceso lógico de resolver un problema de ${topicName}.`,
+      hint: 'Define el inicio, captura de variables, procesamiento de fórmulas y el resultado final.',
+      solution: 'Inicio -> Entrada de variables del sistema -> Validación de datos -> Aplicación del algoritmo de cálculo -> Presentación de solución -> Fin.'
+    },
+    {
+      question: `Identificar las 3 variables de entorno más influyentes en el comportamiento de ${topicName}.`,
+      hint: 'Piensa en parámetros físicos o constantes de configuración de ${materia}.',
+      solution: 'Las variables clave son: las condiciones iniciales de partida, la precisión de los instrumentos o datos de entrada, y el entorno de perturbaciones externas.'
+    },
+    {
+      question: `Dada una ecuación simplificada del tema: Y = X² + 2X, si el valor medido experimental es X = 3, calcula Y y estima su validez teórica.`,
+      hint: 'Sustituye X = 3 directamente en la ecuación y analiza el resultado.',
+      solution: 'Y = 3² + 2(3) = 9 + 6 = 15. Es teóricamente válido si el rango de entrada de X incluye valores positivos.'
+    },
+    {
+      question: `Explica en tus propias palabras cómo influye el incremento del tiempo de estudio en el dominio de ${topicName}.`,
+      hint: 'Relaciona las horas dedicadas con el nivel de análisis y la capacidad de abstracción.',
+      solution: 'Un mayor tiempo permite profundizar en las derivaciones matemáticas o de diseño, analizar casos extremos y resolver más ejercicios de práctica avanzada.'
     }
   ];
   let miniGames = [
@@ -257,19 +277,125 @@ function generateFallbackContent(materia, topicName, totalHours) {
       ],
       correct: 0,
       explanation: 'El enfoque universitario busca la comprensión profunda y la capacidad de modelado.',
-      weakArea: 'Conceptos fundamentales'
+      weakArea: 'Conceptos fundamentales',
+      type: 'teoria'
     },
     {
-      question: `Para resolver un problema complejo de ${topicName}, lo primero es:`,
+      question: '¿Qué diferencia fundamental existe entre una teoría y una ley científica?',
       options: [
-        'Hacer operaciones al azar',
-        'Analizar el problema, identificar variables y plantear un modelo',
-        'Buscar la solución final directamente',
-        'Ignorar las unidades de medida'
+        'La ley explica el "cómo" ocurre un fenómeno físico (usando matemáticas), mientras que la teoría explica el "por qué" (mecanismo subyacente).',
+        'La ley es absoluta y nunca cambia; la teoría es una simple opinión.',
+        'La teoría se convierte en ley tras acumular suficientes experimentos a favor.',
+        'No existe ninguna diferencia; son sinónimos científicos.'
+      ],
+      correct: 0,
+      explanation: 'Las leyes describen patrones repetitivos en la naturaleza (por ejemplo, leyes de Kepler o Newton), a menudo de forma matemática. Las teorías ofrecen marcos explicativos amplios sustentados por evidencia.',
+      weakArea: 'Filosofía de la ciencia',
+      type: 'teoria'
+    },
+    {
+      question: 'En el método científico, una hipótesis es útil únicamente si:',
+      options: [
+        'Es verdadera desde el principio.',
+        'Puede ser sometida a prueba experimental (es falseable).',
+        'Ha sido formulada por un científico con amplia reputación.',
+        'Está escrita en lenguaje matemático avanzado.'
       ],
       correct: 1,
-      explanation: 'Un método sistemático es fundamental para el éxito en ciencias e ingeniería.',
-      weakArea: 'Metodología de resolución'
+      explanation: 'La falseabilidad es un pilar del método científico. Una hipótesis debe poder someterse a pruebas rigurosas que potencialmente puedan refutarla.',
+      weakArea: 'Método Científico',
+      type: 'teoria'
+    },
+    {
+      question: 'Para resolver un problema complejo, el primer paso metodológico correcto es:',
+      options: [
+        'Hacer operaciones matemáticas con los números de inmediato.',
+        'Analizar el enunciado, identificar variables conocidas e incógnitas y bosquejar un modelo gráfico.',
+        'Buscar la solución final directamente en Internet.',
+        'Ignorar las unidades de medida.'
+      ],
+      correct: 1,
+      explanation: 'Un método sistemático (diagrama de flujo o representación de variables) es crucial para estructurar problemas complejos de ingeniería y ciencias.',
+      weakArea: 'Metodología de resolución',
+      type: 'practica'
+    },
+    {
+      question: `Si un objeto se mueve con velocidad constante de 5 m/s, ¿cuánto avanza en 10 segundos?`,
+      options: [
+        '2 metros',
+        '50 metros',
+        '15 metros',
+        '0.5 metros'
+      ],
+      correct: 1,
+      explanation: 'Aplicando la fórmula clásica de movimiento rectilíneo uniforme d = v * t = 5 m/s * 10 s = 50 m.',
+      weakArea: 'Cálculo de movimiento',
+      type: 'practica'
+    },
+    {
+      question: `¿Cómo se calcula la densidad de un cuerpo de 20 g que ocupa un volumen de 5 cm³?`,
+      options: [
+        '100 g/cm³',
+        '4 g/cm³',
+        '0.25 g/cm³',
+        '15 g/cm³'
+      ],
+      correct: 1,
+      explanation: 'Densidad = masa / volumen = 20 g / 5 cm³ = 4 g/cm³.',
+      weakArea: 'Cálculo de densidad',
+      type: 'practica'
+    },
+    {
+      question: 'Si el error absoluto de una medición de peso es 0.1g y el valor real es 10g, el error relativo porcentual es:',
+      options: [
+        '1%',
+        '10%',
+        '0.1%',
+        '0.01%'
+      ],
+      correct: 0,
+      explanation: 'Error relativo = error absoluto / valor real = 0.1 / 10 = 0.01 (que equivale al 1%).',
+      weakArea: 'Teoría de Errores',
+      type: 'practica'
+    },
+    {
+      question: 'Un sistema cerrado recibe 150 J de calor y realiza 50 J de trabajo sobre el entorno. El cambio de energía interna (ΔU) es:',
+      options: [
+        '200 J',
+        '100 J',
+        '-100 J',
+        '7500 J'
+      ],
+      correct: 1,
+      explanation: 'Por la primera ley de la termodinámica: ΔU = Q - W = 150 J - 50 J = 100 J.',
+      weakArea: 'Leyes Termodinámicas',
+      type: 'practica'
+    },
+    {
+      question: 'Si duplicamos la distancia entre dos masas puntuales, la fuerza de atracción gravitatoria entre ellas:',
+      options: [
+        'Se reduce a la mitad.',
+        'Se reduce a la cuarta parte (1/4).',
+        'Se duplica.',
+        'Permanece constante.'
+      ],
+      correct: 1,
+      explanation: 'La fuerza gravitatoria es inversamente proporcional al cuadrado de la distancia. Al duplicar r, la fuerza se divide entre 2² = 4.',
+      weakArea: 'Fuerza Gravitatoria',
+      type: 'practica'
+    },
+    {
+      question: 'Un proceso tiene un rendimiento de eficiencia del 80%. Si la energía de entrada total es de 250 J, la energía útil de salida es:',
+      options: [
+        '200 J',
+        '312.5 J',
+        '50 J',
+        '180 J'
+      ],
+      correct: 0,
+      explanation: 'Eficiencia = Energía Útil / Energía Entrada => Energía Útil = 250 J * 0.80 = 200 J.',
+      weakArea: 'Rendimiento y Eficiencia',
+      type: 'practica'
     }
   ];
 
@@ -297,6 +423,26 @@ function generateFallbackContent(materia, topicName, totalHours) {
         question: 'Calcular lim(x→0) tan(2x) / x',
         hint: 'Usa la identidad tan(u) = sin(u)/cos(u) y el límite fundamental sin(u)/u → 1.',
         solution: 'Reescribe como (sin(2x)/x) * (1/cos(2x)) = 2 * (sin(2x)/2x) * (1/cos(2x)). Al evaluar x→0, queda 2 * 1 * 1 = 2.'
+      },
+      {
+        question: 'Calcular lim(x→3) (x² - 9) / (x - 3)',
+        hint: 'Diferencia de cuadrados en el numerador y simplifica.',
+        solution: '(x - 3)(x + 3)/(x - 3) = x + 3. Evaluando en 3 da 6.'
+      },
+      {
+        question: 'Calcular lim(x→∞) (5x² + 2) / (3x² - x)',
+        hint: 'Divide todo entre x² (el mayor grado del denominador).',
+        solution: 'Al dividir por x², los términos 2/x² y x/x² tienden a 0. Queda 5/3.'
+      },
+      {
+        question: 'Demostrar que lim(x→0) x · sin(1/x) = 0.',
+        hint: 'Aplica el teorema del emparedado (o acotación) sabiendo que |sin(1/x)| <= 1.',
+        solution: 'Como -1 <= sin(1/x) <= 1, multiplicando por |x| queda -|x| <= x·sin(1/x) <= |x|. Como lim |x| = 0, el límite es 0.'
+      },
+      {
+        question: 'Calcular lim(x→2) (x² - 4) / (x² - 2x)',
+        hint: 'Factoriza x en el denominador y diferencia de cuadrados en el numerador.',
+        solution: '(x - 2)(x + 2) / [x(x - 2)] = (x + 2) / x. Evaluando en 2 da 4/2 = 2.'
       }
     ];
     miniGames[0].data = [
@@ -312,6 +458,45 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
     quiz = [
       {
+        question: 'Si lim(x→a) f(x) = L, esto significa formalmente que:',
+        options: [
+          'La función f(a) obligatoriamente está definida y es igual a L.',
+          'Para todo ε > 0, existe un δ > 0 tal que si 0 < |x - a| < δ, entonces |f(x) - L| < ε.',
+          'La función es continua en todo el eje real.',
+          'El límite por la izquierda es diferente al límite por la derecha.'
+        ],
+        correct: 1,
+        explanation: 'Esta es la definición formal de límite de Cauchy (épsilon-delta). Describe cómo la función se acerca a L al aproximarse x a a sin importar si f(a) existe.',
+        weakArea: 'Definición formal de Límite',
+        type: 'teoria'
+      },
+      {
+        question: '¿Qué condiciones formales determinan que una función f(x) es continua en un punto x = a?',
+        options: [
+          'Que f(a) exista y que el límite lim(x→a) f(x) exista.',
+          'Que el límite lim(x→a) f(x) exista, que f(a) esté definida y que lim(x→a) f(x) = f(a).',
+          'Que la función tenga una derivada positiva en x = a.',
+          'Que los límites laterales existan y sumen cero.'
+        ],
+        correct: 1,
+        explanation: 'La continuidad en x=a requiere tres condiciones: 1. f(a) existe. 2. lim(x→a) f(x) existe. 3. El límite es igual al valor de la función en el punto.',
+        weakArea: 'Definición de Continuidad',
+        type: 'teoria'
+      },
+      {
+        question: 'Si lim(x→a) f(x) = L > 0 y lim(x→a) g(x) = 0 con g(x) > 0 para todo x cercano a a, ¿cuál es el límite lim(x→a) f(x)/g(x)?',
+        options: [
+          'No existe y diverge a más infinito (+∞).',
+          'Es igual a L.',
+          'Es 0.',
+          'Es una indeterminación.'
+        ],
+        correct: 0,
+        explanation: 'Una constante positiva dividida por valores positivos infinitesimalmente cercanos a cero resulta en un valor que diverge a +∞.',
+        weakArea: 'Propiedades de Límites e Infinito',
+        type: 'teoria'
+      },
+      {
         question: 'Si lim(x→a) f(x) = 0 y lim(x→a) g(x) = 0, ¿qué se puede afirmar a priori sobre lim(x→a) f(x)/g(x)?',
         options: [
           'El límite no existe.',
@@ -320,8 +505,9 @@ function generateFallbackContent(materia, topicName, totalHours) {
           'Es siempre igual a 1.'
         ],
         correct: 2,
-        explanation: 'La forma 0/0 es una indeterminación. El valor real del límite dependerá de cómo se aproximen ambas funciones a cero (por ejemplo, aplicando la Regla de L\'Hôpital o simplificación algebraica).',
-        weakArea: 'Concepto de Indeterminación'
+        explanation: 'La forma 0/0 es una indeterminación. El valor real del límite dependerá de cómo se aproximen ambas funciones a cero.',
+        weakArea: 'Concepto de Indeterminación',
+        type: 'practica'
       },
       {
         question: 'Si una función f(x) cumple que f(1) = 3, pero lim(x→1) f(x) = 5, ¿cuál de las siguientes afirmaciones es correcta?',
@@ -333,7 +519,73 @@ function generateFallbackContent(materia, topicName, totalHours) {
         ],
         correct: 2,
         explanation: 'Una discontinuidad es evitable si el límite en el punto existe pero difiere del valor de la función, es decir, lim(x→c) f(x) ≠ f(c).',
-        weakArea: 'Definición de Continuidad'
+        weakArea: 'Clasificación de Discontinuidades',
+        type: 'practica'
+      },
+      {
+        question: 'Calcular el límite: lim(x→4) (√x - 2) / (x - 4)',
+        options: [
+          '1/2',
+          '1/4',
+          '0',
+          'No existe (indeterminado)'
+        ],
+        correct: 1,
+        explanation: 'Multiplicando por el conjugado (√x + 2)/(√x + 2), el numerador queda x-4, el cual se cancela con el denominador. Evaluando x→4 queda 1/(√4 + 2) = 1/4.',
+        weakArea: 'Cálculo por Conjugados',
+        type: 'practica'
+      },
+      {
+        question: 'Calcular el límite: lim(x→0) tan(2x) / x',
+        options: [
+          '0',
+          '1',
+          '2',
+          'No existe'
+        ],
+        correct: 2,
+        explanation: 'Reescribiendo tan(2x) como sin(2x)/cos(2x), obtenemos (sin(2x)/x) * (1/cos(2x)). Multiplicando por 2/2 queda 2 * (sin(2x)/2x) * (1/cos(2x)). Al evaluar x→0, queda 2 * 1 * 1 = 2.',
+        weakArea: 'Límites Trigonométricos',
+        type: 'practica'
+      },
+      {
+        question: 'Calcular el límite: lim(x→∞) (3x² - x) / (2x² + 5)',
+        options: [
+          '∞',
+          '0',
+          '3/2',
+          '1.5'
+        ],
+        correct: 2,
+        explanation: 'Dividiendo numerador y denominador entre x² (el mayor grado), queda (3 - 1/x) / (2 + 5/x²). Al evaluar en ∞, los términos con denominador de x tienden a 0, quedando 3/2.',
+        weakArea: 'Límites al Infinito',
+        type: 'practica'
+      },
+      {
+        question: 'Calcular el límite: lim(x→2) (x² - 4) / (x - 2)',
+        options: [
+          '2',
+          '4',
+          '0',
+          '∞'
+        ],
+        correct: 1,
+        explanation: 'Factorizando la diferencia de cuadrados en el numerador: (x - 2)(x + 2) / (x - 2) = (x + 2). Evaluando en x=2, el límite es 2 + 2 = 4.',
+        weakArea: 'Factorización algebraica',
+        type: 'practica'
+      },
+      {
+        question: 'Determinar el valor de la constante k para que la función f(x) sea continua en x = 2: f(x) = { kx + 1 si x <= 2, x² - 1 si x > 2 }',
+        options: [
+          'k = 1',
+          'k = 2',
+          'k = 3',
+          'k = 0'
+        ],
+        correct: 0,
+        explanation: 'Para continuidad, los límites laterales deben ser iguales: lim(x→2⁻) (kx + 1) = 2k + 1. lim(x→2⁺) (x² - 1) = 2² - 1 = 3. Igualando: 2k + 1 = 3 => 2k = 2 => k = 1.',
+        weakArea: 'Continuidad con parámetros',
+        type: 'practica'
       }
     ];
   } else if (formattedTopic.includes('derivada') || formattedTopic.includes('deriv') || formattedTopic.includes('derivación')) {
@@ -360,6 +612,26 @@ function generateFallbackContent(materia, topicName, totalHours) {
         question: 'Encontrar el punto crítico de f(x) = x² - 4x + 5 y determinar si es máximo o mínimo.',
         hint: 'Calcula la primera derivada, iguala a cero y evalúa el signo de la segunda derivada.',
         solution: "f'(x) = 2x - 4 = 0 => x = 2. Como f''(x) = 2 > 0, es un mínimo local."
+      },
+      {
+        question: 'Derivar f(x) = sin(x²).',
+        hint: 'Usa la regla de la cadena con u = x².',
+        solution: "f'(x) = cos(x²) · 2x = 2x·cos(x²)."
+      },
+      {
+        question: 'Derivar f(x) = x · e^x.',
+        hint: 'Usa la regla del producto (u · v)\' = u\'v + uv\'.',
+        solution: "f'(x) = 1·e^x + x·e^x = e^x(1 + x)."
+      },
+      {
+        question: 'Calcular la pendiente de la recta tangente a f(x) = ln(x) en x = e.',
+        hint: 'Calcula f\'(x) y evalúala en x = e.',
+        solution: "f'(x) = 1/x. En x = e, la pendiente es 1/e."
+      },
+      {
+        question: 'Determinar los puntos de inflexión de f(x) = x³ - 3x.',
+        hint: 'Obtén la segunda derivada f\'\'(x) e iguala a 0.',
+        solution: "f'(x) = 3x² - 3, f''(x) = 6x. Igualando a cero: 6x = 0 => x = 0. El punto de inflexión es (0, 0)."
       }
     ];
     miniGames[0].data = [
@@ -375,6 +647,45 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
     quiz = [
       {
+        question: 'La definición formal de la derivada de f(x) en x es:',
+        options: [
+          "f'(x) = lim(h→0) [f(x+h) - f(x)] / h",
+          "f'(x) = [f(x+h) - f(x)] / h",
+          "f'(x) = lim(x→0) f(x) / x",
+          "f'(x) = f(x+1) - f(x)"
+        ],
+        correct: 0,
+        explanation: 'La derivada es el límite de la pendiente de la recta secante (cociente incremental) a medida que el incremento h tiende a 0.',
+        weakArea: 'Definición de Derivada',
+        type: 'teoria'
+      },
+      {
+        question: 'Si una función f(x) es diferenciable en x = c, entonces:',
+        options: [
+          'La función obligatoriamente es continua en x = c.',
+          'Su derivada f\'(c) debe ser igual a cero.',
+          'La función es continua en todo su dominio.',
+          'La función no tiene puntos críticos.'
+        ],
+        correct: 0,
+        explanation: 'Teorema fundamental: La diferenciabilidad implica continuidad en un punto. Lo contrario no siempre es cierto (ej: f(x) = |x| en x=0).',
+        weakArea: 'Diferenciabilidad y Continuidad',
+        type: 'teoria'
+      },
+      {
+        question: 'El Teorema del Valor Medio para derivadas afirma que si f es continua en [a,b] y diferenciable en (a,b), entonces existe un c en (a,b) tal que:',
+        options: [
+          "f'(c) = [f(b) - f(a)] / (b - a)",
+          "f'(c) = 0",
+          "f(c) = 0",
+          "f'(c) = f(b) - f(a)"
+        ],
+        correct: 0,
+        explanation: 'Establece que en algún punto c del intervalo, la pendiente instantánea (derivada) es igual a la pendiente promedio del intervalo.',
+        weakArea: 'Teoremas del Cálculo',
+        type: 'teoria'
+      },
+      {
         question: 'Si una función f(x) tiene f\'(c) = 0 y f\'\'(c) = 0, ¿qué se puede concluir con certeza sobre el punto c?',
         options: [
           'Que c es un máximo local.',
@@ -383,11 +694,12 @@ function generateFallbackContent(materia, topicName, totalHours) {
           'El criterio de la segunda derivada no es concluyente; se requiere analizar derivadas de orden superior o el cambio de signo de f\'.'
         ],
         correct: 3,
-        explanation: 'Si la segunda derivada es cero, el criterio de la segunda derivada no decide. Puede ser un extremo o un punto de inflexión (ej: y=x³ vs y=x⁴ en x=0).',
-        weakArea: 'Criterio de la segunda derivada'
+        explanation: 'Si la segunda derivada es cero, el criterio de la segunda derivada no decide. Puede ser un extremo o un punto de inflexión.',
+        weakArea: 'Criterio de la segunda derivada',
+        type: 'practica'
       },
       {
-        question: '¿Cuál de las siguientes afirmaciones respecto a la diferenciabilidad de f(x) = |x| en x = 0 es correcta?',
+        question: '¿Cuál de las siguientes describe con mayor precisión la diferencia de f(x) = |x| en x = 0?',
         options: [
           'Es diferenciable porque es una función continua en toda la recta real.',
           'La derivada en x = 0 es 0 porque es el punto más bajo de la curva.',
@@ -396,7 +708,73 @@ function generateFallbackContent(materia, topicName, totalHours) {
         ],
         correct: 2,
         explanation: 'La función valor absoluto tiene un "pico" en x=0. Los límites laterales de la pendiente de la secante son 1 (por la derecha) y -1 (por la izquierda), por lo que la derivada no existe en ese punto.',
-        weakArea: 'Diferenciabilidad y continuidad'
+        weakArea: 'Diferenciabilidad y continuidad',
+        type: 'practica'
+      },
+      {
+        question: 'Calcular la derivada de f(x) = sin(x² + 1):',
+        options: [
+          "f'(x) = cos(x² + 1)",
+          "f'(x) = 2x · cos(x² + 1)",
+          "f'(x) = 2x · sin(x² + 1)",
+          "f'(x) = -2x · cos(x² + 1)"
+        ],
+        correct: 1,
+        explanation: 'Aplicando la regla de la cadena: derivada de sin(u) es cos(u) * u\'. Con u = x² + 1, su derivada u\' es 2x. Por tanto, f\'(x) = 2x · cos(x² + 1).',
+        weakArea: 'Regla de la Cadena',
+        type: 'practica'
+      },
+      {
+        question: 'Encontrar el punto crítico de f(x) = x² - 4x + 5 y determinar si es máximo o mínimo.',
+        options: [
+          'x = 2 (mínimo local)',
+          'x = 2 (máximo local)',
+          'x = 4 (mínimo local)',
+          'x = 0 (máximo local)'
+        ],
+        correct: 0,
+        explanation: "f'(x) = 2x - 4 = 0 => x = 2. Como f''(x) = 2 > 0, es un mínimo local según el criterio de la segunda derivada.",
+        weakArea: 'Optimización y Puntos Críticos',
+        type: 'practica'
+      },
+      {
+        question: '¿Cuál es la derivada de f(x) = ln(3x) para x > 0?',
+        options: [
+          '1 / x',
+          '3 / x',
+          '1 / (3x)',
+          '1 / (x * ln(3))'
+        ],
+        correct: 0,
+        explanation: "Por regla de la cadena: [ln(3x)]' = 1/(3x) * 3 = 1/x.",
+        weakArea: 'Derivada de logaritmos',
+        type: 'practica'
+      },
+      {
+        question: 'Calcular la ecuación de la recta tangente a y = x² en el punto x = 2.',
+        options: [
+          'y = 4x - 4',
+          'y = 4x',
+          'y = 2x + 4',
+          'y = 4x + 4'
+        ],
+        correct: 0,
+        explanation: "La pendiente m es f'(2) = 2(2) = 4. El punto en la curva es (2, 4). Usando punto-pendiente: y - 4 = 4(x - 2) => y = 4x - 8 + 4 => y = 4x - 4.",
+        weakArea: 'Recta Tangente',
+        type: 'practica'
+      },
+      {
+        question: 'Dada la posición s(t) = t³ - 3t, calcular la aceleración en el instante t = 2.',
+        options: [
+          '12',
+          '6',
+          '9',
+          '2'
+        ],
+        correct: 0,
+        explanation: "Velocidad v(t) = s'(t) = 3t² - 3. Aceleración a(t) = s''(t) = 6t. Evaluando en t = 2: a(2) = 6(2) = 12.",
+        weakArea: 'Aplicaciones de la derivada',
+        type: 'practica'
       }
     ];
   } else if (formattedTopic.includes('poo') || formattedTopic.includes('objeto') || formattedTopic.includes('clase') || formattedTopic.includes('orientada a objetos')) {
@@ -423,6 +801,26 @@ function generateFallbackContent(materia, topicName, totalHours) {
         question: '¿Qué es el polimorfismo y cómo se implementa en Java?',
         hint: 'Piensa en métodos sobrescritos (@Override) y referencias de clases base.',
         solution: 'Permite que una referencia de clase padre invoque el método específico de la subclase instanciada en tiempo de ejecución.'
+      },
+      {
+        question: 'Diseñar una clase abstracta Figura y subclases Circulo y Cuadrado que definan el método calcularArea().',
+        hint: 'Usa la palabra clave abstract class y abstract double calcularArea().',
+        solution: 'public abstract class Figura { public abstract double calcularArea(); } y luego las subclases implementan el cuerpo del método.'
+      },
+      {
+        question: 'Crear un ejemplo de herencia simple en Java usando Vehiculo y Auto.',
+        hint: 'Usa extends para heredar los atributos de Vehiculo en Auto.',
+        solution: 'public class Vehiculo {} public class Auto extends Vehiculo {}'
+      },
+      {
+        question: '¿Cómo aplicarías encapsulamiento a una clase Empleado con atributos sueldo y nombre?',
+        hint: 'Declara variables privadas y añade métodos accesores (getters y setters) públicos con validaciones.',
+        solution: 'private double sueldo; private String nombre; public double getSueldo() { return sueldo; }'
+      },
+      {
+        question: 'Explicar el concepto de interfaz en Java y su diferencia principal con la herencia de clases.',
+        hint: 'Una clase puede implementar múltiples interfaces pero solo extender una clase padre.',
+        solution: 'Las interfaces definen contratos sin estado mutable de instancia. Permiten herencia múltiple de comportamiento mediante implements.'
       }
     ];
     miniGames[0].data = [
@@ -438,6 +836,45 @@ function generateFallbackContent(materia, topicName, totalHours) {
     ];
     quiz = [
       {
+        question: '¿Qué es el encapsulamiento en Programación Orientada a Objetos?',
+        options: [
+          'Ocultar el estado interno de un objeto y exigir que todo acceso se realice a través de métodos públicos.',
+          'Permitir que una clase herede comportamiento de múltiples clases base.',
+          'La capacidad de declarar métodos sin especificar su implementación.',
+          'Crear múltiples constructores con diferentes firmas en la misma clase.'
+        ],
+        correct: 0,
+        explanation: 'El encapsulamiento protege la integridad de los datos de un objeto controlando cómo se leen o modifican desde el exterior.',
+        weakArea: 'Encapsulamiento',
+        type: 'teoria'
+      },
+      {
+        question: 'El polimorfismo en programación orientada a objetos se puede definir como:',
+        options: [
+          'La habilidad de que una sola interfaz o referencia de tipo base represente a múltiples formas (objetos de subclases).',
+          'Crear muchos objetos de la misma clase usando la palabra clave new.',
+          'Declarar constantes compartidas que no cambian en el ciclo de vida del programa.',
+          'Permitir que un objeto se guarde directamente en un archivo binario.'
+        ],
+        correct: 0,
+        explanation: 'El polimorfismo permite que una referencia de clase base invoque métodos sobrescritos de su subclase en tiempo de ejecución.',
+        weakArea: 'Polimorfismo',
+        type: 'teoria'
+      },
+      {
+        question: '¿Cuál de las siguientes describe con mayor precisión la diferencia entre clase abstracta e interfaz a partir de Java 8?',
+        options: [
+          'Las clases abstractas pueden almacenar variables de instancia que representan un estado mutable, mientras que las interfaces solo pueden declarar constantes implícitas (public static final).',
+          'Las interfaces ya no permiten herencia múltiple.',
+          'Las interfaces ya no pueden contener métodos sin implementación.',
+          'Las clases abstractas solo permiten métodos con visibilidad protegida.'
+        ],
+        correct: 0,
+        explanation: 'A pesar de que las interfaces modernas permiten métodos por defecto y estáticos con cuerpo, la diferencia clave sigue siendo el estado: las clases abstractas pueden tener constructores y variables de instancia no constantes, mientras que las interfaces solo admiten variables implícitamente estáticas y constantes.',
+        weakArea: 'Clases abstractas vs Interfaces',
+        type: 'teoria'
+      },
+      {
         question: 'En Java, si una clase hija sobrescribe un método de la clase padre heredando la misma firma, pero cambia el tipo de retorno a un subtipo del tipo de retorno original (ej. retornar ArrayList en vez de List):',
         options: [
           'Provoca un error de compilación por firma incompatible.',
@@ -447,19 +884,86 @@ function generateFallbackContent(materia, topicName, totalHours) {
         ],
         correct: 1,
         explanation: 'Java permite los retornos covariantes en la sobrescritura, lo cual significa que el método de la subclase puede devolver un tipo derivado del tipo de retorno declarado en la clase base.',
-        weakArea: 'Retorno covariante en POO'
+        weakArea: 'Retorno covariante en POO',
+        type: 'practica'
       },
       {
-        question: '¿Cuál de las siguientes describe con mayor precisión la diferencia entre clase abstracta e interfaz a partir de Java 8?',
+        question: 'Si declaras un atributo private saldo en CuentaBancaria, ¿cómo permiten las buenas prácticas que clases externas accedan a él de forma segura?',
         options: [
-          'Las interfaces ya no permiten herencia múltiple.',
-          'Las clases abstractas pueden almacenar variables de instancia que representan un estado mutable, mientras que las interfaces solo pueden declarar constantes implícitas (public static final).',
-          'Las interfaces ya no pueden contener métodos sin implementación.',
-          'Las clases abstractas solo permiten métodos con visibilidad protegida.'
+          'Creando métodos públicos getter y setter, y agregando validaciones lógicas en los setters para evitar valores absurdos.',
+          'Cambiando el atributo a protected para que cualquiera en el proyecto pueda acceder de forma directa.',
+          'El atributo privado no debe poder leerse ni modificarse bajo ninguna circunstancia.',
+          'Usando reflexores para burlar el nivel de acceso.'
+        ],
+        correct: 0,
+        explanation: 'Los getters y setters (métodos accesores) permiten el encapsulamiento seguro al poder validar e interceptar operaciones antes de modificar el estado interno.',
+        weakArea: 'Métodos accesores y Encapsulamiento',
+        type: 'practica'
+      },
+      {
+        question: 'Dada la clase Animal con el método hacerSonido() y una subclase Perro que sobrescribe hacerSonido(). Si declaras Animal a = new Perro(); a.hacerSonido(); ¿cuál método se ejecuta?',
+        options: [
+          'El método hacerSonido() de la clase Animal.',
+          'El método hacerSonido() de la clase Perro, resuelto en tiempo de ejecución.',
+          'Se produce un error de compilación.',
+          'Se ejecutan ambos métodos en cascada.'
         ],
         correct: 1,
-        explanation: 'A pesar de que las interfaces modernas permiten métodos por defecto y estáticos con cuerpo, la diferencia clave sigue siendo el estado: las clases abstractas pueden tener constructores y variables de instancia no constantes, mientras que las interfaces solo admiten variables implícitamente estáticas y constantes.',
-        weakArea: 'Clases abstractas vs Interfaces'
+        explanation: 'Este es un ejemplo clásico de enlace dinámico y polimorfismo: Java decide el método a invocar basado en la instancia real del objeto (Perro) y no en el tipo de la referencia (Animal).',
+        weakArea: 'Enlace dinámico de métodos',
+        type: 'practica'
+      },
+      {
+        question: 'En Java, si intentas heredar de una clase declarada como "final class":',
+        options: [
+          'La clase hija hereda todos los métodos pero no puede sobrescribir ninguno.',
+          'Provoca un error de compilación de forma inmediata.',
+          'Se permite pero con advertencias del compilador.',
+          'Solo se permite si la clase hija está en el mismo paquete.'
+        ],
+        correct: 1,
+        explanation: 'La palabra clave final en una clase previene la herencia, por lo que intentar extenderla arroja un error de compilación.',
+        weakArea: 'Clases final en Java',
+        type: 'practica'
+      },
+      {
+        question: 'Si declaras un método estático "public static void mostrar()", significa que:',
+        options: [
+          'El método pertenece a la clase en sí, no a las instancias, y puede llamarse directamente como Clase.mostrar().',
+          'El método no puede tener cuerpo y debe ser sobrescrito en subclases.',
+          'El método solo puede acceder a variables de instancia no estáticas.',
+          'El método se ejecuta automáticamente al iniciar la aplicación.'
+        ],
+        correct: 0,
+        explanation: 'Los elementos estáticos pertenecen a la clase. Se pueden invocar directamente usando el nombre de la clase sin instanciar objetos.',
+        weakArea: 'Miembros estáticos (static)',
+        type: 'practica'
+      },
+      {
+        question: 'Dada una clase base con constructor "public Persona(String nombre)" y creas una subclase "Estudiante" con constructor "public Estudiante(String nombre, int matricula)". ¿Qué debe contener la primera línea de este último?',
+        options: [
+          'super(nombre);',
+          'this.nombre = nombre;',
+          'Persona.Persona(nombre);',
+          'this.super(nombre);'
+        ],
+        correct: 0,
+        explanation: 'Si la clase base no posee un constructor por defecto sin argumentos, la subclase debe invocar explícitamente el constructor de la superclase en su primera línea usando super(...).',
+        weakArea: 'Constructores y Herencia',
+        type: 'practica'
+      },
+      {
+        question: 'Si una interfaz en Java declara métodos sin cuerpo, y deseas implementar ese contrato en tu clase Pajaro, ¿cuál palabra clave debes usar en la declaración de la clase?',
+        options: [
+          'implements',
+          'extends',
+          'uses',
+          'inherits'
+        ],
+        correct: 0,
+        explanation: 'La palabra clave implements se utiliza para que una clase adopte un contrato definido por una o más interfaces.',
+        weakArea: 'Implementación de interfaces',
+        type: 'practica'
       }
     ];
   }
@@ -507,6 +1011,7 @@ async function generateTopicContentWithOpenAI(materia, topicName, totalHours) {
 Responde ÚNICAMENTE con un objeto JSON válido y estructurado según el esquema indicado.
 El contenido debe adaptarse dinámicamente al tiempo disponible del usuario. Si el tiempo total de estudio es bajo (ej. 1-2 horas), sé muy sintético y directo a las fórmulas y conceptos clave. Si es alto, expande las explicaciones y la teoría.
 Debes incluir AL MENOS 5 ejercicios prácticos variados con diferentes niveles de dificultad (desde básico hasta avanzado) para que el alumno practique extensamente. Incluye también al menos 2 mini-juegos interactivos para hacer el aprendizaje didáctico.
+Además, DEBES incluir un test de evaluación con EXACTAMENTE 10 preguntas de opción múltiple, donde exactamente 3 de ellas sean de teoría (conceptos, definiciones, propiedades) marcadas con "type": "teoria" y exactamente 7 sean de práctica (cálculos, análisis de problemas, aplicación) marcadas con "type": "practica".
 Además, DEBES incluir al menos 3 videos de apoyo de YouTube relevantes al tema. Para cada video, proporciona un título descriptivo y una URL de búsqueda de YouTube con el formato https://www.youtube.com/results?search_query=TERMINOS+DE+BUSQUEDA que lleve al estudiante directamente a resultados relevantes del tema.`;
 
     const userPrompt = `Asignatura: "${materia}"
@@ -557,7 +1062,8 @@ Esquema JSON requerido:
       "options": ["Opción 0", "Opción 1", "Opción 2", "Opción 3"],
       "correct": 0,
       "explanation": "Explicación de por qué es la correcta (string)",
-      "weakArea": "Tema de debilidad a repasar si se falla (string)"
+      "weakArea": "Tema de debilidad a repasar si se falla (string)",
+      "type": "teoria | practica"
     }
   ],
   "supportVideos": [
@@ -569,7 +1075,7 @@ Esquema JSON requerido:
   ]
 }
 
-Asegúrate de agregar al menos 3 flashcards y 4 parejas en el matching game. Genera de 3 a 5 preguntas en el quiz. IMPORTANTE: Las preguntas del quiz NO deben ser obvias ni de simple memorización; deben requerir análisis lógico, deducción matemática o conceptual y hacer pensar al alumno. DEBES generar AL MENOS 5 ejercicios prácticos en practicalExercises, con dificultad variada (básico, intermedio, avanzado). DEBES incluir al menos 3 videos de apoyo en supportVideos con URLs de búsqueda de YouTube relevantes al tema y a la materia. Devuelve solo el JSON válido sin bloques de código markdown (\`\`\`json) ni texto adicional.`;
+Asegúrate de agregar al menos 3 flashcards y 4 parejas en el matching game. DEBES generar EXACTAMENTE 10 preguntas en el quiz, con exactamente 3 de teoría (poniendo "type": "teoria") y exactamente 7 de práctica (poniendo "type": "practica"). IMPORTANTE: Las preguntas del quiz NO deben ser obvias ni de simple memorización; deben requerir análisis lógico, deducción matemática o conceptual y hacer pensar al alumno. DEBES generar AL MENOS 5 ejercicios prácticos en practicalExercises, con dificultad variada (básico, intermedio, avanzado). DEBES incluir al menos 3 videos de apoyo en supportVideos con URLs de búsqueda de YouTube relevantes al tema y a la materia. Devuelve solo el JSON válido sin bloques de código markdown (\`\`\`json) ni texto adicional.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

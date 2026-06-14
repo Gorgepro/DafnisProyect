@@ -1428,3 +1428,89 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
+
+/* ==========================================================================
+   SUB-TABS (Material vs Evaluación) & QUESTION TYPING BADGES
+   ========================================================================= */
+.study__subtabs {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-5);
+  align-self: flex-start;
+  width: max-content;
+}
+
+.study__subtab-btn {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.study__subtab-btn:hover {
+  color: var(--text-primary);
+}
+
+.study__subtab-btn--active {
+  background: var(--bg-primary);
+  color: var(--primary-700);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+/* Question badges styling */
+.study__question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.study__question-type {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.study__question-type--teoria {
+  background: rgba(var(--primary-rgb), 0.08);
+  color: var(--primary-700);
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
+}
+
+.study__question-type--practica {
+  background: rgba(103, 58, 183, 0.08);
+  color: #673ab7;
+  border: 1px solid rgba(103, 58, 183, 0.15);
+}
+
+/* Dark mode overrides for type badges */
+.theme-dark .study__question-type--teoria {
+  background: rgba(var(--primary-rgb), 0.15);
+  color: var(--primary-300);
+  border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.theme-dark .study__question-type--practica {
+  background: rgba(150, 117, 206, 0.15);
+  color: #b39ddb;
+  border-color: rgba(150, 117, 206, 0.3);
+}

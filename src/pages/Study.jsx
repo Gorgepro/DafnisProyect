@@ -267,10 +267,13 @@ export default function Study() {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Sub-navigation: 'material' or 'evaluation'
+  const [studySubTab, setStudySubTab] = useState('material');
 
   const resetTopicFlow = useCallback(() => {
     setQuizSubmitted(false);
     setAnswers({});
+    setStudySubTab('material');
   }, []);
 
   // Fetch plan list
@@ -737,247 +740,151 @@ export default function Study() {
           {/* UNIFIED STUDY MATERIAL CONTENT */}
           {activeTopic && generatedContent && !contentLoading && (
             <article className="study__guide animate-in">
-              {/* 1. OBJETIVO */}
-              <section className="study__section">
-                <h2 className="study__section-title">🎯 Objetivo del tema</h2>
-                <p className="study__text">{generatedContent.objective}</p>
-              </section>
+              {/* Material vs Evaluation Subtabs */}
+              <div className="study__subtabs">
+                <button
+                  type="button"
+                  className={`study__subtab-btn ${studySubTab === 'material' ? 'study__subtab-btn--active' : ''}`}
+                  onClick={() => setStudySubTab('material')}
+                >
+                  📚 Material de Estudio
+                </button>
+                <button
+                  type="button"
+                  className={`study__subtab-btn ${studySubTab === 'evaluation' ? 'study__subtab-btn--active' : ''}`}
+                  onClick={() => setStudySubTab('evaluation')}
+                >
+                  📝 Evaluación de Aprendizaje
+                </button>
+              </div>
 
-              {/* 2. TEORÍA */}
-              <section className="study__section">
-                <h2 className="study__section-title">📖 Explicación Teórica</h2>
-                <p className="study__text" style={{ whiteSpace: 'pre-wrap' }}>{generatedContent.explanation}</p>
-              </section>
+              {studySubTab === 'material' ? (
+                <>
+                  {/* 1. OBJETIVO */}
+                  <section className="study__section">
+                    <h2 className="study__section-title">🎯 Objetivo del tema</h2>
+                    <p className="study__text">{generatedContent.objective}</p>
+                  </section>
 
-              {/* 3. CONCEPTOS CLAVE */}
-              {generatedContent.keyConcepts?.length > 0 && (
-                <section className="study__section">
-                  <h2 className="study__section-title">💡 Conceptos clave</h2>
-                  <ul className="study__list">
-                    {generatedContent.keyConcepts.map((concept, i) => (
-                      <li key={i}>{concept}</li>
-                    ))}
-                  </ul>
-                </section>
-              )}
+                  {/* 2. TEORÍA */}
+                  <section className="study__section">
+                    <h2 className="study__section-title">📖 Explicación Teórica</h2>
+                    <p className="study__text" style={{ whiteSpace: 'pre-wrap' }}>{generatedContent.explanation}</p>
+                  </section>
 
-              {/* 4. FÓRMULAS */}
-              {generatedContent.formulas?.length > 0 && (
-                <section className="study__section">
-                  <h2 className="study__section-title">📐 Fórmulas y definiciones</h2>
-                  <div className="study__formulas">
-                    {generatedContent.formulas.map((f, i) => (
-                      <pre key={i} className="study__formula">{f}</pre>
-                    ))}
-                  </div>
-                </section>
-              )}
+                  {/* 3. CONCEPTOS CLAVE */}
+                  {generatedContent.keyConcepts?.length > 0 && (
+                    <section className="study__section">
+                      <h2 className="study__section-title">💡 Conceptos clave</h2>
+                      <ul className="study__list">
+                        {generatedContent.keyConcepts.map((concept, i) => (
+                          <li key={i}>{concept}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
 
-              {/* 5. VIDEOS DE APOYO */}
-              {generatedContent.supportVideos?.length > 0 && (
-                <section className="study__section study__section--videos">
-                  <h2 className="study__section-title">🎬 Videos de Apoyo</h2>
-                  <p className="study__section-subtitle">Videos recomendados de YouTube para reforzar tu comprensión del tema.</p>
-                  <div className="study__videos-grid">
-                    {generatedContent.supportVideos.map((video, i) => (
-                      <a
-                        key={i}
-                        href={video.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="study__video-card"
-                      >
-                        <div className="study__video-icon">▶</div>
-                        <div className="study__video-info">
-                          <h4 className="study__video-title">{video.title}</h4>
-                          <p className="study__video-desc">{video.description}</p>
-                        </div>
-                        <span className="study__video-external">↗</span>
-                      </a>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* 6. EJERCICIOS RESUELTOS */}
-              {generatedContent.solvedExercises?.length > 0 && (
-                <section className="study__section">
-                  <h2 className="study__section-title">✅ Ejercicios Resueltos</h2>
-                  {generatedContent.solvedExercises.map((ex, i) => (
-                    <div key={i} className="study__exercise">
-                      <div className="study__exercise-header">
-                        <h3>{ex.title}</h3>
-                        <span className="study__badge">{ex.difficulty}</span>
+                  {/* 4. FÓRMULAS */}
+                  {generatedContent.formulas?.length > 0 && (
+                    <section className="study__section">
+                      <h2 className="study__section-title">📐 Fórmulas y definiciones</h2>
+                      <div className="study__formulas">
+                        {generatedContent.formulas.map((f, i) => (
+                          <pre key={i} className="study__formula">{f}</pre>
+                        ))}
                       </div>
-                      <div className="study__exercise-problem">
-                        <strong>Problema:</strong>
-                        <pre>{ex.problem}</pre>
+                    </section>
+                  )}
+
+                  {/* 5. VIDEOS DE APOYO */}
+                  {generatedContent.supportVideos?.length > 0 && (
+                    <section className="study__section study__section--videos">
+                      <h2 className="study__section-title">🎬 Videos de Apoyo</h2>
+                      <p className="study__section-subtitle">Videos recomendados de YouTube para reforzar tu comprensión del tema.</p>
+                      <div className="study__videos-grid">
+                        {generatedContent.supportVideos.map((video, i) => (
+                          <a
+                            key={i}
+                            href={video.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="study__video-card"
+                          >
+                            <div className="study__video-icon">▶</div>
+                            <div className="study__video-info">
+                              <h4 className="study__video-title">{video.title}</h4>
+                              <p className="study__video-desc">{video.description}</p>
+                            </div>
+                            <span className="study__video-external">↗</span>
+                          </a>
+                        ))}
                       </div>
-                      <div className="study__exercise-solution">
-                        <strong>Solución:</strong>
-                        <ol>
-                          {ex.solution.map((step, si) => (
-                            <li key={si}>{step}</li>
-                          ))}
-                        </ol>
-                      </div>
-                      <p className="study__exercise-answer">
-                        <strong>Respuesta:</strong> {ex.finalAnswer}
-                      </p>
-                    </div>
-                  ))}
-                </section>
-              )}
+                    </section>
+                  )}
 
-              {/* 7. EJERCICIOS PRÁCTICOS */}
-              {generatedContent.practicalExercises?.length > 0 && (
-                <section className="study__section">
-                  <h2 className="study__section-title">✍️ Ejercicios Prácticos</h2>
-                  <p className="study__section-subtitle">Intenta resolver estos problemas por tu cuenta para poner en práctica tus conocimientos.</p>
-                  {generatedContent.practicalExercises.map((ex, i) => (
-                    <PracticalExerciseItem key={i} exercise={ex} index={i} />
-                  ))}
-                </section>
-              )}
-
-              {/* 8. MINI JUEGOS INTERACTIVOS */}
-              {generatedContent.miniGames?.length > 0 && (
-                <section className="study__section study__section--games">
-                  <h2 className="study__section-title">🎮 Mini-Juegos Didácticos</h2>
-                  <InteractiveGames games={generatedContent.miniGames} />
-                </section>
-              )}
-
-              {/* 9. TEST DE AUTOEVALUACIÓN */}
-              {generatedContent.quiz?.length > 0 && (
-                <section className="study__section study__section--quiz">
-                  <h2 className="study__section-title">📝 Test de Autoevaluación</h2>
-                  
-                  {quizSubmitted && Object.keys(answers).length === 0 ? (
-                    /* Previously completed topic card */
-                    <div className="study__quiz-completed-banner">
-                      <span className="banner-icon">🏆</span>
-                      <div>
-                        <h3>¡Ya has aprobado este test!</h3>
-                        <p>Completaste este tema con una calificación de <strong>{activeTopic.score || 100}%</strong>.</p>
-                      </div>
-                      <button
-                        type="button"
-                        className="btn-secondary"
-                        onClick={() => {
-                          setQuizSubmitted(false);
-                          setAnswers({});
-                        }}
-                      >
-                        Volver a tomar el test
-                      </button>
-                    </div>
-                  ) : !quizSubmitted ? (
-                    <div className="study__quiz animate-in">
-                      <p className="study__quiz-intro">
-                        Responde las {generatedContent.quiz.length} preguntas del test para evaluar tu comprensión y marcar este tema como completado.
-                      </p>
-
-                      {generatedContent.quiz.map((q, qi) => (
-                        <div key={qi} className="study__question">
-                          <p className="study__question-text">{q.question}</p>
-                          <div className="study__options">
-                            {q.options.map((opt, oi) => (
-                              <label
-                                key={oi}
-                                className={`study__option ${answers[qi] === oi ? 'study__option--selected' : ''}`}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`q${qi}`}
-                                  checked={answers[qi] === oi}
-                                  onChange={() => handleAnswer(qi, oi)}
-                                />
-                                <span className="study__option-marker" />
-                                {opt}
-                              </label>
-                            ))}
+                  {/* 6. EJERCICIOS RESUELTOS */}
+                  {generatedContent.solvedExercises?.length > 0 && (
+                    <section className="study__section">
+                      <h2 className="study__section-title">✅ Ejercicios Resueltos</h2>
+                      {generatedContent.solvedExercises.map((ex, i) => (
+                        <div key={i} className="study__exercise">
+                          <div className="study__exercise-header">
+                            <h3>{ex.title}</h3>
+                            <span className="study__badge">{ex.difficulty}</span>
                           </div>
+                          <div className="study__exercise-problem">
+                            <strong>Problema:</strong>
+                            <pre>{ex.problem}</pre>
+                          </div>
+                          <div className="study__exercise-solution">
+                            <strong>Solución:</strong>
+                            <ol>
+                              {ex.solution.map((step, si) => (
+                                <li key={si}>{step}</li>
+                              ))}
+                            </ol>
+                          </div>
+                          <p className="study__exercise-answer">
+                            <strong>Respuesta:</strong> {ex.finalAnswer}
+                          </p>
                         </div>
                       ))}
+                    </section>
+                  )}
 
-                      <div className="study__quiz-actions">
-                        <button
-                          type="button"
-                          className="btn-primary"
-                          onClick={submitQuiz}
-                          disabled={Object.keys(answers).length < generatedContent.quiz.length || saving}
-                        >
-                          {saving ? 'Guardando...' : 'Enviar respuestas del test'}
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="study__results animate-in">
-                      <div className="study__result-header-card">
-                        <p className="study__result-score">
-                          Obtuviste <strong>{scoreData.score}%</strong> ({scoreData.correct} de {scoreData.total} correctas)
-                        </p>
-                      </div>
+                  {/* 7. EJERCICIOS PRÁCTICOS */}
+                  {generatedContent.practicalExercises?.length > 0 && (
+                    <section className="study__section">
+                      <h2 className="study__section-title">✍️ Ejercicios Prácticos</h2>
+                      <p className="study__section-subtitle">Intenta resolver estos problemas por tu cuenta para poner en práctica tus conocimientos.</p>
+                      {generatedContent.practicalExercises.map((ex, i) => (
+                        <PracticalExerciseItem key={i} exercise={ex} index={i} />
+                      ))}
+                    </section>
+                  )}
 
-                      {generatedContent.quiz.map((q, qi) => {
-                        const isCorrect = answers[qi] === q.correct;
-                        return (
-                          <div
-                            key={qi}
-                            className={`study__question study__question--review ${isCorrect ? 'study__question--correct' : 'study__question--wrong'}`}
-                          >
-                            <p className="study__question-text">
-                              {isCorrect ? '✓' : '✗'} {q.question}
-                            </p>
-                            <div className="study__options">
-                              {q.options.map((opt, oi) => {
-                                let cls = 'study__option';
-                                if (oi === q.correct) cls += ' study__option--correct';
-                                else if (answers[qi] === oi) cls += ' study__option--wrong';
-                                return (
-                                  <div key={oi} className={cls}>
-                                    {opt}
-                                    {oi === q.correct && <span className="study__option-tag">Correcta</span>}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                            {q.explanation && (
-                              <p className="study__explanation">{q.explanation}</p>
-                            )}
-                          </div>
-                        );
-                      })}
-
-                      <div className="study__result-grid">
-                        <div className="study__result-item study__result-item--strong">
-                          <h3>Puntos fuertes</h3>
-                          {strongAreas.length > 0 ? (
-                            <ul>
-                              {strongAreas.map((a, i) => (
-                                <li key={i}>{a}</li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p>Sigue estudiando para identificar fortalezas.</p>
-                          )}
+                  {/* 8. MINI JUEGOS INTERACTIVOS */}
+                  {generatedContent.miniGames?.length > 0 && (
+                    <section className="study__section study__section--games">
+                      <h2 className="study__section-title">🎮 Mini-Juegos Didácticos</h2>
+                      <InteractiveGames games={generatedContent.miniGames} />
+                    </section>
+                  )}
+                </>
+              ) : (
+                /* 9. TEST DE EVALUACIÓN DE APRENDIZAJE */
+                generatedContent.quiz?.length > 0 && (
+                  <section className="study__section study__section--quiz">
+                    <h2 className="study__section-title">📝 Evaluación de Aprendizaje</h2>
+                    
+                    {quizSubmitted && Object.keys(answers).length === 0 ? (
+                      /* Previously completed topic card */
+                      <div className="study__quiz-completed-banner">
+                        <span className="banner-icon">🏆</span>
+                        <div>
+                          <h3>¡Ya has aprobado este test!</h3>
+                          <p>Completaste este tema con una calificación de <strong>{activeTopic.score || 100}%</strong>.</p>
                         </div>
-                        <div className="study__result-item study__result-item--weak">
-                          <h3>Puntos débiles detectados</h3>
-                          {weakAreas.length > 0 ? (
-                            <ul>
-                              {weakAreas.map((a, i) => (
-                                <li key={i}>{a}</li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p>No se detectaron áreas débiles. ¡Excelente!</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="study__quiz-actions">
                         <button
                           type="button"
                           className="btn-secondary"
@@ -986,12 +893,146 @@ export default function Study() {
                             setAnswers({});
                           }}
                         >
-                          Repetir test
+                          Volver a tomar el test
                         </button>
                       </div>
-                    </div>
-                  )}
-                </section>
+                    ) : !quizSubmitted ? (
+                      <div className="study__quiz animate-in">
+                        <p className="study__quiz-intro">
+                          Responde las {generatedContent.quiz.length} preguntas de la evaluación para verificar tu aprendizaje y completar este tema.
+                        </p>
+
+                        {generatedContent.quiz.map((q, qi) => (
+                          <div key={qi} className="study__question">
+                            <div className="study__question-header">
+                              <span className="study__question-number">Pregunta {qi + 1} de {generatedContent.quiz.length}</span>
+                              {q.type && (
+                                <span className={`study__question-type study__question-type--${q.type}`}>
+                                  {q.type === 'teoria' ? 'Teoría' : 'Práctica'}
+                                </span>
+                              )}
+                            </div>
+                            <p className="study__question-text">{q.question}</p>
+                            <div className="study__options">
+                              {q.options.map((opt, oi) => (
+                                <label
+                                  key={oi}
+                                  className={`study__option ${answers[qi] === oi ? 'study__option--selected' : ''}`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`q${qi}`}
+                                    checked={answers[qi] === oi}
+                                    onChange={() => handleAnswer(qi, oi)}
+                                  />
+                                  <span className="study__option-marker" />
+                                  {opt}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+
+                        <div className="study__quiz-actions">
+                          <button
+                            type="button"
+                            className="btn-primary"
+                            onClick={submitQuiz}
+                            disabled={Object.keys(answers).length < generatedContent.quiz.length || saving}
+                          >
+                            {saving ? 'Guardando...' : 'Enviar respuestas del test'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="study__results animate-in">
+                        <div className="study__result-header-card">
+                          <p className="study__result-score">
+                            Obtuviste <strong>{scoreData.score}%</strong> ({scoreData.correct} de {scoreData.total} correctas)
+                          </p>
+                        </div>
+
+                        {generatedContent.quiz.map((q, qi) => {
+                          const isCorrect = answers[qi] === q.correct;
+                          return (
+                            <div
+                              key={qi}
+                              className={`study__question study__question--review ${isCorrect ? 'study__question--correct' : 'study__question--wrong'}`}
+                            >
+                              <div className="study__question-header">
+                                <span className="study__question-number">Pregunta {qi + 1}</span>
+                                {q.type && (
+                                  <span className={`study__question-type study__question-type--${q.type}`}>
+                                    {q.type === 'teoria' ? 'Teoría' : 'Práctica'}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="study__question-text">
+                                {isCorrect ? '✓' : '✗'} {q.question}
+                              </p>
+                              <div className="study__options">
+                                {q.options.map((opt, oi) => {
+                                  let cls = 'study__option';
+                                  if (oi === q.correct) cls += ' study__option--correct';
+                                  else if (answers[qi] === oi) cls += ' study__option--wrong';
+                                  return (
+                                    <div key={oi} className={cls}>
+                                      {opt}
+                                      {oi === q.correct && <span className="study__option-tag">Correcta</span>}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {q.explanation && (
+                                <p className="study__explanation">{q.explanation}</p>
+                              )}
+                            </div>
+                          );
+                        })}
+
+                        <div className="study__result-grid">
+                          <div className="study__result-item study__result-item--strong">
+                            <h3>Puntos fuertes</h3>
+                            {strongAreas.length > 0 ? (
+                              <ul>
+                                {strongAreas.map((a, i) => (
+                                  <li key={i}>{a}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>Sigue estudiando para identificar fortalezas.</p>
+                            )}
+                          </div>
+                          <div className="study__result-item study__result-item--weak">
+                            <h3>Puntos débiles detectados</h3>
+                            {weakAreas.length > 0 ? (
+                              <ul>
+                                {weakAreas.map((a, i) => (
+                                  <li key={i}>{a}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>No se detectaron áreas débiles. ¡Excelente!</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="study__quiz-actions">
+                          <button
+                            type="button"
+                            className="btn-secondary"
+                            onClick={() => {
+                              setQuizSubmitted(false);
+                              setAnswers({});
+                            }}
+                          >
+                            Repetir test
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </section>
+                )
               )}
             </article>
           )}
