@@ -197,70 +197,17 @@ export default function CreatePlan() {
     setCustomTopics(customTopics.filter((_, i) => i !== index));
   };
 
-  // Create custom subject
-  const saveCustomSubject = (e) => {
-    e.preventDefault();
-    if (!customName.trim()) {
-      setError('Por favor, ingresa un nombre para la materia.');
-      return;
-    }
-    if (customTopics.length === 0) {
-      setError('Debes agregar al menos un tema.');
-      return;
-    }
-
-    const newId = `custom-${Date.now()}`;
-    const newSubj = {
-      id: newId,
-      icon: customIcon,
-      name: customName,
-      desc: 'Materia personalizada añadida por el estudiante.',
-      topics: customTopics
-    };
-
-    const updated = [...addedSubjects, newSubj];
-    setAddedSubjects(updated);
-    localStorage.setItem('added_subjects', JSON.stringify(updated));
-    
-    // Select it
-    setSelectedSubjectId(newId);
-    setSelectedTopics(customTopics);
-    
-    // Reset custom states
-    setCustomName('');
-    setCustomIcon('✨');
-    setCustomTopics([]);
-    setIsCreatingCustom(false);
-    setError('');
-  };
-
-  // Submit and create the plan in DB
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    if (!selectedSubjectId) {
-      setError('Por favor selecciona una materia.');
-      return;
-    }
-
-    if (selectedTopics.length === 0) {
-      setError('Por favor selecciona al menos un tema de interés para estudiar.');
-      return;
-    }
-
-    const activeSubj = addedSubjects.find(s => s.id === selectedSubjectId);
-    if (!activeSubj) return;
-
+  const submitPlan = async (subjName, subjIcon, topics) => {
     setLoading(true);
+    setError('');
 
     const planData = {
       usuario_id: user.id,
-      materia: activeSubj.name,
-      icon: activeSubj.icon,
+      materia: subjName,
+      icon: subjIcon,
       tiempo_dias: parseInt(days),
       horas_diarias: parseInt(hours),
-      temas: selectedTopics.map((topicName, idx) => ({
+      temas: topics.map((topicName, idx) => ({
         id: idx + 1,
         name: topicName,
         completed: false
@@ -279,7 +226,6 @@ export default function CreatePlan() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Also save active plan id to localStorage so study page knows which one is selected
         localStorage.setItem('active_plan_id', data.plan.id);
         navigate('/estudiar');
       } else {
@@ -291,6 +237,56 @@ export default function CreatePlan() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Create custom subject & immediately submit the plan
+  const saveCustomSubject = async (e) => {
+    e.preventDefault();
+    if (!customName.trim()) {
+      setError('Por favor, ingresa un nombre para la materia.');
+      return;
+    }
+    if (customTopics.length === 0) {
+      setError('Debes agregar al menos un tema.');
+      return;
+    }
+
+    // Save definition to local addedSubjects so it remains listed
+    const newId = `custom-${Date.now()}`;
+    const newSubj = {
+      id: newId,
+      icon: customIcon,
+      name: customName.trim(),
+      desc: 'Materia personalizada añadida por el estudiante.',
+      topics: customTopics
+    };
+    const updated = [...addedSubjects, newSubj];
+    setAddedSubjects(updated);
+    localStorage.setItem('added_subjects', JSON.stringify(updated));
+
+    // Submit plan immediately!
+    await submitPlan(customName.trim(), customIcon, customTopics);
+  };
+
+  // Submit and create the plan in DB for catalog selected subjects
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!selectedSubjectId) {
+      setError('Por favor selecciona una materia.');
+      return;
+    }
+
+    if (selectedTopics.length === 0) {
+      setError('Por favor selecciona al menos un tema de interés para estudiar.');
+      return;
+    }
+
+    const activeSubj = addedSubjects.find(s => s.id === selectedSubjectId);
+    if (!activeSubj) return;
+
+    await submitPlan(activeSubj.name, activeSubj.icon, selectedTopics);
   };
 
   const currentSubject = addedSubjects.find(s => s.id === selectedSubjectId);

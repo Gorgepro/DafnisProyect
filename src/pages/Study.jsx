@@ -267,16 +267,6 @@ export default function Study() {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const [theme, setTheme] = useState(() => localStorage.getItem('app_theme') || 'light');
-
-  useEffect(() => {
-    document.documentElement.className = theme === 'dark' ? 'theme-dark' : '';
-    localStorage.setItem('app_theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
 
   const resetTopicFlow = useCallback(() => {
     setQuizSubmitted(false);
@@ -987,14 +977,6 @@ export default function Study() {
           )}
         </main>
       </div>
-      <button
-        type="button"
-        className="study__btn-theme-floating"
-        onClick={toggleTheme}
-        title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
-      >
-        {theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro'}
-      </button>
     </div>
   );
 }
